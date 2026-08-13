@@ -1,18 +1,12 @@
-{% extends 'agents/base.html' %} 
-
-{%block head %} {% endblock %} 
-{% block content %}
-
-{% if messages %}
-  {% for message in messages %}
-      {% include 'accounts/alert.html' with msg=message %}
-    {% endfor %}
-{% endif %}
+{% extends 'agents/base.html' %} {%block head %} {% endblock %} {% block content %} {% if messages %} {% for message in messages %} {% include
+'accounts/alert.html' with msg=message %} {% endfor %} {% endif %}
 
 <!-- dashboard statistics cards -->
 <div class="grid grid-row-1 grid-cols-4 w-full p-2 -mt-2.5 gap-5">
   <!-- Card -1  -->
-  <div class="bg-blue-50 p-2 border-6 border-l-blue-400 border-blue-50 rounded-md flex items-start justify-between">
+  <div
+    class="bg-blue-50 p-2 border-6 border-l-blue-400 border-blue-50 rounded-md flex items-start justify-between"
+  >
     <div class="block py-2.5 px-4">
       <h2 class="text-3xl font-medium text-blue-500">{{ total_listings }}</h2>
       <p class="text-md text-base my-1">My Properties</p>
@@ -34,9 +28,11 @@
   </div>
 
   <!-- Card -2 -->
-  <div class="bg-green-50 border-6 border-l-green-400 border-green-50 p-2 rounded-md flex items-start justify-between">
+  <div
+    class="bg-green-50 border-6 border-l-green-400 border-green-50 p-2 rounded-md flex items-start justify-between"
+  >
     <div class="block py-2.5 px-4">
-      <h2 class="text-3xl font-medium text-green-500">0</h2>
+      <h2 class="text-3xl font-medium text-green-500">{{ total_active_properties }}</h2>
       <p class="text-md text-base my-1">Active Listings</p>
     </div>
     <svg
@@ -56,9 +52,11 @@
   </div>
 
   <!-- Card -3 -->
-  <div class="bg-purple-50 p-2 border-8 border-l-purple-400 border-purple-50 rounded-md flex items-start justify-between">
+  <div
+    class="bg-purple-50 p-2 border-8 border-l-purple-400 border-purple-50 rounded-md flex items-start justify-between"
+  >
     <div class="block py-2.5 px-4">
-      <h2 class="text-3xl font-medium text-purple-500">0</h2>
+      <h2 class="text-3xl font-medium text-purple-500">{{ total_inquiries }}</h2>
       <p class="text-md text-base my-1">Inquiries</p>
     </div>
     <svg
@@ -78,7 +76,9 @@
   </div>
 
   <!-- Card -4 -->
-  <div class="bg-yellow-50 p-2 border-8 border-l-yellow-400 border-yellow-50 rounded-lg flex items-start justify-between">
+  <div
+    class="bg-yellow-50 p-2 border-8 border-l-yellow-400 border-yellow-50 rounded-lg flex items-start justify-between"
+  >
     <div class="block py-2.5 px-4">
       <h2 class="text-3xl font-medium text-yellow-500">0</h2>
       <p class="text-md text-base my-1">Viewings</p>
@@ -101,8 +101,43 @@
 </div>
 
 <!-- Recent Properties -->
-<div class="p-2 grid grid-row grid-cols-2">
-
+<div class="p-2 grid grid-row grid-cols-2 gap-4 h-[400px]">
   {% include "properties/recent_properties.html" with properties=Recent_Properties %}
+
+  <div class="p-4 bg-white rounded shadow mt-4">
+    <h3 class="text-lg font-medium mb-2">Properties Posted Per Month</h3>
+    <canvas id="propertiesMonthlyChart" width="600" height="300"></canvas>
+  </div>
+  
 </div>
-{% endblock %} {% block scripts %} {% endblock %}
+<!-- Monthly properties chart -->
+{% endblock %} {% block scripts %} {% endblock %} {% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  (function(){
+    const labels = JSON.parse('{{ monthly_labels_json | safe }}');
+    const data = JSON.parse('{{ monthly_counts_json | safe }}');
+
+    const ctx = document.getElementById('propertiesMonthlyChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Properties',
+          data: data,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  })();
+</script>
+{% endblock %}

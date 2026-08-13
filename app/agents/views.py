@@ -4,14 +4,42 @@ from app.view_access import owner_required
 from django.contrib import messages
 from properties.models import PropertyImage
 from accounts.models import User, Profile
+from properties.models import Property
+from inquiries.models import Inquiry
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+import datetime
+import calendar
+import json
+from django.utils.safestring import mark_safe
 
 # Create your views here.
 @owner_required
 def agents_dashboard(request):
     id = request.GET.get('id')
-    context =  { 
-        "total_listings": request.user.profile.properties.all().count(),
-        "Recent_Properties": request.user.profile.properties.all()
+    # basic stats
+    user_properties = request.user.profile.properties.all()
+
+    # aggregate properties per month for the current year
+    current_year = datetime.date.today().year
+    monthly_qs = Property.objects.filter(created_at__year=current_year).annotate(month=TruncMonth('created_at')).values('month').annotate(count=Count('id')).order_by('month')
+
+    # prepare a full 12-month series (Jan..Dec) with zeros for months without data
+    month_counts = {m: 0 for m in range(1, 13)}
+    for row in monthly_qs:
+        m = row['month'].month
+        month_counts[m] = row['count']
+
+    labels = [calendar.month_name[m] for m in range(1, 13)]
+    counts = [month_counts[m] for m in range(1, 13)]
+
+    context =  {
+        "total_listings": user_properties.count(),
+        "Recent_Properties": user_properties,
+        "total_active_properties" : request.user.profile.properties.filter(status='active').count(),
+        "total_inquiries": Inquiry.objects.filter(profile=request.user.profile.id).count(),
+        "monthly_labels_json": mark_safe(json.dumps(labels)),
+        "monthly_counts_json": mark_safe(json.dumps(counts)),
     }
     return render(request, "agents/dashboard.html", context)
 

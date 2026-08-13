@@ -14,6 +14,7 @@ def property_details(request):
     property_id = request.GET.get('property_id')
 
     property = Property.objects.filter(id=property_id).first()
+
     context = { 
         "property": property
     }
@@ -76,3 +77,6 @@ def delete_property(request, id):
     deleting_property.delete()
     messages.success(request, "Property deleted successfully.")
     return redirect(reverse("agents:agents_dashboard")+f"?id={request.user.id}")
+
+
+

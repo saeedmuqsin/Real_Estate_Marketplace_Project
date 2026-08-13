@@ -33,11 +33,20 @@
         </p>
       </div>
       <div class="w-1/5">
+        {% if property.status == "active" %}
         <p
           class="bg-green-50 p-3 text-sm bg-green-50 text-green-500 text-center font-medium rounded-md"
         >
-          Active
+          {{ property.status | capfirst }}
         </p>
+        
+        {% else %}
+        <p
+          class="bg-yellow-50 p-3 text-sm text-yellow-500 text-center font-medium rounded-md"
+        >
+          {{ property.status | capfirst }}
+        </p>
+        {% endif %}
         <p class="text-sm text-black/40 block mt-5">
           {{ property.created_at |date:"M d, Y" }}
         </p>
