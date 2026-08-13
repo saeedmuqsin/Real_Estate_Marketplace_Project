@@ -1,0 +1,54 @@
+{% load humanize %}
+
+<div class="bg-white px-3.5 py-7 border border-blue-50 rounded-md my-5">
+  <!-- heading -->
+  <div class="flex items-center justify-between">
+    <h2 class="text-lg font-medium">Recent Properties</h2>
+    <a href="/agents/my_properties/?id={{ request.user.id }}" class="text-blue-500 text-md">View All</a>
+  </div>
+  <hr class="my-3 text-black/5" />
+
+  <!-- properties card -->
+  <div class="block w-full py-2">
+    <!-- Cards -->
+
+    {% for property in properties %}
+    <div class="p-3 flex items-center gap-2">
+      <div class="w-1/5">
+        {% with image=property.images.first %} {% if image %}
+        <img
+        class="size-20 w-full rounded-md"
+        src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+        alt="{{ property.title }}"
+        />
+        {% endif %} {% endwith %}
+      </div>
+      <div class="w-3/5 block mx-5">
+        <h3 class="text-xl font-medium font-sans">
+          GH₵ {{ property.price | intcomma }}
+        </h3>
+        <p class="text-md font-sans">{{ property.title }}</p>
+        <p class="text-sm font-sans text-black/60 font-medium">
+          {{ property.location }}
+        </p>
+      </div>
+      <div class="w-1/5">
+        <p
+          class="bg-green-50 p-3 text-sm bg-green-50 text-green-500 text-center font-medium rounded-md"
+        >
+          Active
+        </p>
+        <p class="text-sm text-black/40 block mt-5">
+          {{ property.created_at |date:"M d, Y" }}
+        </p>
+      </div>
+    </div>
+    <hr class="my-3 text-black/5" />
+    {% empty %}
+    <h2 class="text-center my-7.5 text-black/60" >
+      No recent properties available
+    </h2>
+
+    {% endfor %}
+  </div>
+</div>

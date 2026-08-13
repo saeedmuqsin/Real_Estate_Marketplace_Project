@@ -1,0 +1,130 @@
+{% extends 'agents/base.html '%}
+
+{% block head %} {% endblock %}
+
+{% block content %} 
+
+<!-- settings container -->
+<form action="/agents/settings/" method="POST" enctype="multipart/form-data" class="w-full p-2">
+{% csrf_token %}
+    <div class="flex items-center justify-between">
+        <div>
+            <h3 class="text-2xl font-medium text-black/70">Account Information</h3>
+            <p class="text-md font-medium text-black/60">Update your personal information and account details.</p>
+        </div>
+
+    </div>
+    <hr class=" mt-3 mb-4 text-gray-200">
+
+    <!-- Profile Image upload-->
+   
+    <div class="relative mb-10">
+        <img id="profile-preview" src="https://api.dicebear.com/10.x/initials/svg?seed={{ request.user.name }}" class="size-23 rounded-full text-sm mx-auto" alt="profile_name" />
+        <h2 class="text-xl mt-4 font-medium text-black/80 text-center">Profile Photo</h2>
+        <p class="text-center text-black/60 text-sm font-medium">JPG, PNG or GIF, Max size of 2MD</p>
+    </div>
+
+
+    <div class="grid grid-row-1 grid-cols-2 mx-4">
+      <div class="block m-2">
+        <label for="fullname" class="font-medium">Full Name:</label>
+        <input
+          id="fullname"
+          type="text"
+          name="username"
+          value="{{ request.user.name }}"
+          required
+          class="block my-2 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+        />
+      </div>
+
+      <div class="block m-2">
+        <label for="email" class="font-medium">Email Address:</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value="{{ request.user.email }}"
+          required
+          class="block my-2 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+        />
+      </div>
+
+      <div class="block m-2">
+        <label for="phone-number" class="font-medium text-black/80"
+          >Phone Number:</label
+        >
+        <input
+          id="phone-number"
+          type="text"
+          name="phone_number"
+          value="{{ request.user.phone_number }}"
+          required
+          class="block my-2 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+        />
+      </div>
+
+      <div class="block m-2">
+        <label for="gender " class="font-medium text-black/80">Gender:</label>
+        <select
+          id="gender"
+          name="gender"
+          required
+          class="col-start-1 my-2 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+        >
+          {% if request.user.gender == "male"%}
+          <option value="male" selected>Male</option>
+          <option value="female">Female</option>
+
+          {% else %}
+          <option value="male">Male</option>
+          <option value="female" selected>Female</option>
+
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="col-span-2 p-2 mx-1">
+        <label for="bio" class="font-medium">Profile Bio:</label>
+         <textarea
+          name="profile-bio"
+          placeholder="Describe yourself in few words."
+          value="{{ request.user.profile.bio }}"
+          required
+          rows="5"
+          class="block w-full mb-4 rounded-md bg-white/5 px-3 py-1.5 text-base text-black/70 outline-1 -outline-offset-1 outline-black/10 mt-2.5 placeholder:text-black/50 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+        >{{ request.user.profile.bio }}</textarea>
+      </div>
+    </div>
+
+    <div class="flex items-center my-4 mx-6 justify-end gap-2">
+      <button
+        type="submit"
+        class="bg-blue-500 text-white p-2 font-medium text-sm rounded-md"
+      >
+        Saves Changes
+      </button>
+      <a
+        href="/agents/dashboard?id={{ request.user.id }}"
+        class="bg-red-500 flex items-center text-white p-2 font-medium text-sm rounded-md"
+        ><i data-lucide="trash-2" class="mx-1 size-4"></i> Discard changes</a
+      >
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.getElementById('profile-photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profile-preview').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+{% endblock %}

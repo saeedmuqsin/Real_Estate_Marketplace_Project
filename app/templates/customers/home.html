@@ -1,0 +1,381 @@
+{% extends "customers/base.html" %} {% load humanize %} {% block head %}
+
+<style>
+  #hero_section {
+    background-image: url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+</style>
+
+{% endblock %} {% block content %}
+
+<!-- home section -->
+<section
+  id="hero_section"
+  class="-mt-4 py-20 px-4 md:p-10 w-full h-screen block"
+>
+  <div class="w-full md:w-[60%] md:mx-10 py-20 px-5 block">
+    <h2
+      class="text-2xl md:text-6xl font-medium text-white md:p-5 text-center md:text-left"
+    >
+      Find Your Perfect Property in Ghana.
+    </h2>
+    <p
+      class="text-center md:text-left mt-5.5 mb-5 md:mb-0 md:mt-0 w-full text-lg md:text-lg text-white px-5 md:w-7/10"
+    >
+      Buy, rent or sell properties easily with trusted agents and verified
+      listings.
+    </p>
+
+    </div>
+  </div>
+
+  <div
+    class="flex items-center justify-between md:justify-around md:mt-25 flex-wrap gap-2"
+  >
+    <div class="flex items-center gap-2 text-white">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-8 md:size-10 text-white"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+        />
+      </svg>
+      <div class="block p-0 mt-2.5 mx-2">
+        <h3 class="font-bold text-lg md:text-2xl ext-black/90">2,450+</h3>
+        <p>Properties Listed</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-white">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-8 md:size-10 text-white"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+        />
+      </svg>
+      <div class="block p-0 mt-2.5 mx-2">
+        <h3 class="font-bold text-lg md:text-2xl">1,200+</h3>
+        <p>Trusted Agents</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-white">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-8 md:size-10 text-white"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+        />
+      </svg>
+
+      <div class="block p-0 mt-2.5 mx-2">
+        <h3 class="font-bold text-lg md:text-2xl ext-black/90">1,200+</h3>
+        <p>Happy Users</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-white">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-8 md:size-10 text-white"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+        />
+      </svg>
+
+      <div class="block p-0 mt-2.5 mx-2">
+        <h3 class="font-bold text-lg md:text-2xl ext-black/90">All regions</h3>
+        <p>Accross Ghana</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- featured properties -->
+<section class="py-10 px-4 md:px-10 w-full h-full block">
+  <h3
+    class="text-[24px] text-center md:text-[30px] font-medium py-2 px-20 text-black/70"
+  >
+    Featured Properties
+  </h3>
+  <div
+    class="md:w-[90%] mb-5.5 mt-5 mx-auto p-3 flex flex-col md:flex-row h-full items-center justify-between gap-2 flex-wrap"
+  >
+    {% for property in properties %}
+    <!-- Property Card -->
+    <div class="w-[90%] md:w-[25%] bg-white rounded-md mx p-2.5 shadow-sm">
+      {% with image=property.images.first %}
+      <img
+        class="rounded-md w-full h-[200px]"
+        src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+        alt="property_image"
+      />
+
+      {% endwith %}
+      <!-- Title and location -->
+      <div class="flex item-center justify-between">
+        <div class="block my-2">
+          <h3 class="text font-medium">{{ property.title }}</h3>
+          <p class="text-sm flex items-center text-black/50"><i data-lucide="map-pin" class="size-5 mr-0.5"></i> <span>{{ property.location }}</span></p>
+        </div>
+
+        <div class="block my-2 relative">
+           <h3 class="text-xl font-medium">GH₵ {{ property.price|intcomma }}</h3>
+           <p class="text-xs mt-1 text-center absolute right-1 px-2 py-1 rounded-md bg-blue-500 text-white w-1/2">{{ property.listing_type }}</p>
+        </div>
+      </div>
+
+      <!-- Property Feature -->
+      <div class="flex items-center gap-4 my-5">
+        <p class="bg-gray-100 px-1 py-2 flex items-center justify-center rounded-md w-full">
+          <i data-lucide="bed-double" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.bedrooms }} Beds</span>
+        </p>
+        
+        <p class="bg-gray-100 px-1 py-2 rounded-md flex items-center justify-center w-full">
+          <i data-lucide="shower-head" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.bedrooms }} Baths</span>
+        </p>
+
+        <p class="bg-gray-100 px-1 py-2 rounded-md flex items-center justify-center w-full">
+          <i data-lucide="square-dashed" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.area_size }} sq</span>
+        </p>
+      </div>
+
+      <!-- View details button  -->
+      <div class="flex items-center w-full gap-4 mt-5 mb-3">
+        <a href="/properties/details/?property_id={{ property.id }}" class="bg-blue-500 font-noraml px-2 py-2.5 text-white w-full rounded-full hover:shadow-md text-md text-center">View Detail</a>
+        <a href="#" class="p-4 rounded-full bg-gray-100"><i data-lucide="heart" class="size-4"></i>  </a>
+      </div>
+
+    </div>
+
+    {% endfor %}
+  </div>
+</section>
+
+<!-- About Us Section -->
+<section id="about-us" class="w-full md:h-[70vh] px-5 py-10 md:pt-25 bg-white">
+  <h2
+    class="text-[24px] text-center md:text-[30px] font-medium py-2 px-20 text-black/80"
+  >
+    About Us
+  </h2>
+  <p
+    class="text-center text-xs mx-auto md:text-left mt-4 mb-5 md:mb-0 md:mt-0 w-full text-lg md:text-lg text-black/70 px-5 md:w-7/10"
+  >
+    Welcome to our real estate platform, your trusted partner in finding the
+    perfect property in Ghana. We connect buyers, sellers, and renters with
+    verified listings and experienced agents to make your property journey
+    seamless and stress-free.
+  </p>
+  <div
+    class="w-[90%] p-0 md:p-3 mt-4 mx-auto md:w-7/10 flex items-center justify-between gap-2 flex-wrap rounded-md"
+  >
+    <div class="w-full md:w-[30%] px-3 py-4 flex items-center gap-2 rounded-md">
+      <svg
+        class="size-10 text-blue-400 mx-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+        fill="blue"
+      >
+        <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path
+          d="M245.9-25.9c-13.4-8.2-30.3-8.2-43.7 0-24.4 14.9-39.5 18.9-68.1 18.3-15.7-.4-30.3 8.1-37.9 21.9-13.7 25.1-24.8 36.2-49.9 49.9-13.8 7.5-22.2 22.2-21.9 37.9 .7 28.6-3.4 43.7-18.3 68.1-8.2 13.4-8.2 30.3 0 43.7 14.9 24.4 18.9 39.5 18.3 68.1-.4 15.7 8.1 30.3 21.9 37.9 22.1 12.1 33.3 22.1 45.1 41.5L42.7 458.5c-5.9 11.9-1.1 26.3 10.7 32.2l86 43c11.5 5.7 25.5 1.4 31.7-9.8l52.8-95.1 52.8 95.1c6.2 11.2 20.2 15.6 31.7 9.8l86-43c11.9-5.9 16.7-20.3 10.7-32.2l-48.6-97.2c11.7-19.4 23-29.4 45.1-41.5 13.8-7.5 22.2-22.2 21.9-37.9-.7-28.6 3.4-43.7 18.3-68.1 8.2-13.4 8.2-30.3 0-43.7-14.9-24.4-18.9-39.5-18.3-68.1 .4-15.7-8.1-30.3-21.9-37.9-25.1-13.7-36.2-24.8-49.9-49.9-7.5-13.8-22.2-22.2-37.9-21.9-28.6 .7-43.7-3.4-68.1-18.3zM224 96a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
+        />
+      </svg>
+      <div class="block text-black/70">
+        <h2 class="text-xl font-medium text-black/90 mt-2">Trusted Listings</h2>
+        <p class="w-3/4 text-sm">Verified properties for a peace of mind.</p>
+      </div>
+    </div>
+
+    <div class="w-full md:w-[30%] px-3 py-4 flex items-center gap-2 rounded-md">
+      <svg
+        class="size-10 mx-5"
+        fill="blue"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 576 512"
+      >
+        <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path
+          d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l251.5 0C261 469.4 240 414.5 240 356.4l0-31.1c0-7.3 1-14.5 2.9-21.3l-48.6 0zm251 184.5l-13.3 6.3 0-188.1 96 32 0 19.6c0 55.8-32.2 106.5-82.7 130.3zM421.9 259.5l-112 37.3c-13.1 4.4-21.9 16.6-21.9 30.4l0 31.1c0 74.4 43 142.1 110.2 173.7l18.5 8.7c4.8 2.2 10 3.4 15.2 3.4s10.5-1.2 15.2-3.4l18.5-8.7C533 500.3 576 432.6 576 358.2l0-31.1c0-13.8-8.8-26-21.9-30.4l-112-37.3c-6.6-2.2-13.7-2.2-20.2 0z"
+        />
+      </svg>
+      <div class="block text-black/70">
+        <h2 class="text-xl font-medium text-black/90 mt-2">Expert Agents</h2>
+        <p class="w-3/4 text-sm">Professional agents ready to help.</p>
+      </div>
+    </div>
+
+    <div class="w-full md:w-[30%] px-3 py-4 flex items-center gap-2 rounded-md">
+      <svg
+        class="size-10 mx-5"
+        fill="blue"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path
+          d="M256 0c4.6 0 9.2 1 13.4 2.9L457.8 82.8c22 9.3 38.4 31 38.3 57.2-.5 99.2-41.3 280.7-213.6 363.2-16.7 8-36.1 8-52.8 0-172.4-82.5-213.1-264-213.6-363.2-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.9 1 251.4 0 256 0zm0 66.8l0 378.1c138-66.8 175.1-214.8 176-303.4l-176-74.6 0 0z"
+        />
+      </svg>
+      <div class="block text-black/70">
+        <h2 class="text-xl font-medium text-black/90 mt-2">Secure Platform</h2>
+        <p class="w-3/4 text-sm">Safe and reliable property transactions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact section -->
+<section
+  id="contact-us"
+  class="p-3 w-full flex-col md:flex-row flex items-center"
+>
+  <div class="w-full md:w-1/2 mx-3 px-6 py-4">
+    <h2 class="text-[24px] md:text-[30px] font-medium mt-1.5 text-black/80">
+      Contact Us
+    </h2>
+    <p class="text-black/70 md:w-2/4 text-base">
+      Have questions or need assistance? We're here to help you find the perfect
+      property.
+    </p>
+
+    <!-- Contact Info -->
+    <div class="block my-5">
+      <p class="flex my-3.5 items-center">
+        <svg
+          class="size-6"
+          fill="blue"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+        >
+          <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+          <path
+            d="M224.2 89C216.3 70.1 195.7 60.1 176.1 65.4L170.6 66.9C106 84.5 50.8 147.1 66.9 223.3C104 398.3 241.7 536 416.7 573.1C493 589.3 555.5 534 573.1 469.4L574.6 463.9C580 444.2 569.9 423.6 551.1 415.8L453.8 375.3C437.3 368.4 418.2 373.2 406.8 387.1L368.2 434.3C297.9 399.4 241.3 341 208.8 269.3L253 233.3C266.9 222 271.6 202.9 264.8 186.3L224.2 89z"
+          />
+        </svg>
+        <span class="mx-1 font-medium">+1 (555) 123-4567</span>
+      </p>
+      <p class="flex my-3.5 items-center">
+        <svg
+          class="size-6"
+          fill="blue"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+        >
+          <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+          <path
+            d="M112 128C85.5 128 64 149.5 64 176C64 191.1 71.1 205.3 83.2 214.4L291.2 370.4C308.3 383.2 331.7 383.2 348.8 370.4L556.8 214.4C568.9 205.3 576 191.1 576 176C576 149.5 554.5 128 528 128L112 128zM64 260L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 260L377.6 408.8C343.5 434.4 296.5 434.4 262.4 408.8L64 260z"
+          />
+        </svg>
+        <span class="mx-1 font-medium">info@homesearch.com</span>
+      </p>
+
+      <p class="flex my-3.5 items-center">
+        <svg
+          class="size-6"
+          fill="blue"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+        >
+          <!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+          <path
+            d="M128 252.6C128 148.4 214 64 320 64C426 64 512 148.4 512 252.6C512 371.9 391.8 514.9 341.6 569.4C329.8 582.2 310.1 582.2 298.3 569.4C248.1 514.9 127.9 371.9 127.9 252.6zM320 320C355.3 320 384 291.3 384 256C384 220.7 355.3 192 320 192C284.7 192 256 220.7 256 256C256 291.3 284.7 320 320 320z"
+          />
+        </svg>
+        <span class="mx-1 font-medium">Accra, Ghana</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <div class="w-full md:w-1/2 px-7 py-4 mx-3">
+    <form action="" method="post" class="w-full space-y-4">
+      {% csrf_token %}
+      <div>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          placeholder="Your name"
+          required
+          class="mt-1 block w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base text-black/80 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          class="mt-1 block w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base text-black/80 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div>
+        <textarea
+          id="message"
+          name="message"
+          rows="3"
+          placeholder="How can we help you?"
+          required
+          class="mt-1 h-[20%] block w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base text-black/80 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ></textarea>
+      </div>
+
+      <div class="text-right">
+        <button
+          type="submit"
+          class="bg-blue-600 block w-full md:w-[40%] md:float-right text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Send Message
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %} {% block scripts %} {% endblock %}

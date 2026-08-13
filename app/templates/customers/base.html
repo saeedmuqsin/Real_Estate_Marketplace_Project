@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {% block head %} {% endblock %}
+    <title></title>
+  </head>
+  <body class="bg-gray-100 pt-20 md:pt-16">
+    <!-- navbar component of the page -->
+    <nav
+      class="w-full fixed top-0 left-0 right-0 z-50 bg-white/90 shadow-sm backdrop-blur-sm py-5 md:p-3 md:flex items-center justify-around"
+    >
+      <a href="/customers/" class="block md:flex items-center gap-2 mx-2.5">
+        <div class="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"
+            />
+          </svg>
+          <h2 class="mx-2 text-lg text-base">
+            <span class="text-black/40">Home</span
+            ><span class="text-blue-500 font-bold mx-0.5">Search</span>
+          </h2>
+        </div>
+      </a>
+
+      <!-- Navbar Menu -->
+      <ul
+        id="nav-menu"
+        class="px-3 max-h-0 overflow-hidden opacity-0 md:overflow-visible md:max-h-none md:opacity-100 md:m-0 md:flex items-center md:p-1 gap-2 transition-all duration-300 ease-out"
+      >
+        <li class="px-2 text-black/70 text-base font-medium mt-5 mb-2 md:my-0">
+          <a href="/customers">Home</a>
+        </li>
+        <li class="px-2 text-black/70 text-base font-medium mb-2 md:my-0">
+          <a href="/customers/properties">Properties</a>
+        </li>
+        <li class="px-2 text-black/70 text-base font-medium mb-2 md:my-0">
+          <a href="/customers#about-us">About us</a>
+        </li>
+        <li class="px-2 text-black/70 text-base font-medium mb-2 md:my-0">
+          <a href="/customers#contact-us">Contact</a>
+        </li>
+
+        <hr class="text-gray-200 my-3.5" />
+        <li
+          class="flex items-center block md:hidden text-black/70 text-base font-medium"
+        >
+          <!-- Logout button -->
+          <a href="/logout/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+              />
+            </svg>
+          </a>
+          Logout
+        </li>
+      </ul>
+
+      <!-- profile side -->
+      <div
+        class="absolute top-4 right-2 md:relative md:top-0 lg:relative flex items-center gap-3"
+      >
+       
+
+        <!-- Profile avatar  -->
+        <div class="flex items-center">
+          <img
+            src="https://api.dicebear.com/10.x/initials/svg?seed={{ request.user.name }}"
+            class="size-9 rounded-full text-sm ml-1"
+            alt="profile_name"
+          />
+          <p class="text-md mx-2 font-medium">{{ request.user.name }}</p>
+        </div>
+
+        <!-- dropdown button -->
+        <!-- DROPDOWN CONTAINER -->
+        <div class="relative inline-block text-left" id="dropdown-wrapper">
+          <!-- DROPDOWN TRIGGER BUTTON -->
+          <button
+            type="button"
+            id="dropdown-btn"
+            onclick="toggleDropdown()"
+            class="inline-flex items-center justify-between gap-x-2 rounded-xl  px-4 py-2.5 text-sm font-semibold text-slate-700 cursor-pointer"
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            <!-- Lucide Chevron Down Icon -->
+            <i id="dropdown-arrow" data-lucide="chevron down" class="size-4"></i>
+          </button>
+
+          <!-- DROPDOWN MENU PANEL -->
+          <div
+            id="dropdown-menu"
+            class="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-2xl bg-white p-1.5 shadow-xl ring-1 ring-slate-900/5 focus:outline-none opacity-0 scale-95 pointer-events-none transition-all duration-150 ease-out"
+            role="menu"
+            aria-orientation="vertical"
+            tabindex="-1"
+          >
+            <!-- Section 1: Quick Actions -->
+            <div class="py-1" role="none">
+
+              <a
+                href="/customers/settings?id={{ request.user.id}}"
+                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100/80 transition-colors"
+                role="menuitem"
+              >
+              <i data-lucide="settings" class="size-4"></i>
+                Account Settings
+              </a>
+
+              <a
+                href="/customers/inquiries"
+                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100/80 transition-colors"
+                role="menuitem"
+              >
+              <i data-lucide="send" class="size-4"></i>
+                Inquiries
+              </a>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="my-1 border-t border-slate-100"></div>
+
+            <!-- Section 2: Danger Zone -->
+            <div class="py-1" role="none">
+              <a
+                href="/logout"
+                class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                role="menuitem"
+              >
+               <i data-lucide="log-out" class="size-4"></i>
+                </svg>
+                Sign Out
+              </a>
+            </div>
+          </div>
+        </div>
+
+        
+
+        <button
+          id="nav-toggle"
+          class="border border-gray-200 rounded-md p-1 md:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %}
+  </body>
+  <script>
+    lucide.createIcons();
+    (function () {
+      const btn = document.getElementById("nav-toggle");
+      const menu = document.getElementById("nav-menu");
+      if (!btn || !menu) return;
+
+      const desktopMedia = window.matchMedia("(min-width: 768px)");
+
+      function closeMenu() {
+        menu.style.maxHeight = menu.scrollHeight + "px";
+        requestAnimationFrame(() => {
+          menu.style.maxHeight = "0px";
+          menu.style.opacity = "0";
+          menu.dataset.open = "false";
+        });
+      }
+
+      function openMenu() {
+        const height = menu.scrollHeight + "px";
+        menu.style.maxHeight = "0px";
+        menu.style.opacity = "0";
+        requestAnimationFrame(() => {
+          menu.style.maxHeight = height;
+          menu.style.opacity = "1";
+          menu.dataset.open = "true";
+        });
+      }
+
+      function updateMenuState() {
+        if (desktopMedia.matches) {
+          menu.style.maxHeight = null;
+          menu.style.opacity = "1";
+          menu.dataset.open = "true";
+        } else if (menu.dataset.open !== "true") {
+          menu.style.maxHeight = "0px";
+          menu.style.opacity = "0";
+          menu.dataset.open = "false";
+        }
+      }
+
+      btn.addEventListener("click", function () {
+        if (desktopMedia.matches) return;
+        if (menu.dataset.open === "true") closeMenu();
+        else openMenu();
+      });
+
+      desktopMedia.addEventListener("change", updateMenuState);
+      updateMenuState();
+    })();
+
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdown-menu");
+      const arrow = document.getElementById("dropdown-arrow");
+      const btn = document.getElementById("dropdown-btn");
+
+      const isOpen = menu.classList.contains("opacity-100");
+
+      if (isOpen) {
+        closeDropdown();
+      } else {
+        // Open Dropdown
+        menu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+        menu.classList.add("opacity-100", "scale-100");
+        arrow.classList.add("rotate-180");
+        btn.setAttribute("aria-expanded", "true");
+      }
+    }
+
+    function closeDropdown() {
+      const menu = document.getElementById("dropdown-menu");
+      const arrow = document.getElementById("dropdown-arrow");
+      const btn = document.getElementById("dropdown-btn");
+
+      menu.classList.remove("opacity-100", "scale-100");
+      menu.classList.add("opacity-0", "scale-95", "pointer-events-none");
+      arrow.classList.remove("rotate-180");
+      btn.setAttribute("aria-expanded", "false");
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+      const wrapper = document.getElementById("dropdown-wrapper");
+      if (!wrapper.contains(event.target)) {
+        closeDropdown();
+      }
+    });
+
+    // Close dropdown when pressing Escape key
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeDropdown();
+      }
+    });
+  </script>
+  {% block scripts %} {% endblock %}
+</html>

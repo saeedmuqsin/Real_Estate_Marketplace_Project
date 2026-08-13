@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Optional: Lucide Icons for clean navigation symbols -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body class="bg-gray-50 font-sans antialiased text-gray-800">
+
+    
+    <div class="flex h-screen overflow-hidden">
+      <!-- BACKDROP (Mobile only: clicks outside the sidebar to close it) -->
+      <div
+        id="sidebar-backdrop"
+        class="fixed inset-0 z-20 bg-black/50 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden"
+      ></div>
+
+      <!-- SIDEBAR -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-30 flex w-64 -translate-x-full flex-col bg-slate-900 text-white transition-transform duration-300 ease-in-out md:static md:translate-x-0"
+      >
+        <!-- Sidebar Header -->
+        <div
+          class="flex h-16 items-center justify-between px-6 border-b border-slate-800"
+        >
+          <div class="flex items-center gap-2 font-medium text-xl tracking-wider">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"
+              />
+            </svg>
+            <h2 class="mx-2 text-lg">
+              <span class="text-white font-normal">Home</span
+              ><span class="text-blue-400 font-medium mx-1">Search</span>
+            </h2>
+          </div>
+          <!-- Close Button (Mobile only) -->
+          <button
+            id="close-sidebar"
+            class="p-1 rounded-md hover:bg-slate-800 focus:outline-none md:hidden"
+            aria-label="Close Sidebar"
+          >
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+        <!-- Sidebar Navigation Links -->
+        <nav class="flex-1 space-y-1 px-4 py-6 overflow-y-auto">
+          <a
+            href="/agents/dashboard/?id={{ request.user.id }}"
+            class="flex items-center text-sm gap-3 px-3 py-2.5 rounded-lg bg-blue-500 text-white font-medium transition-colors"
+          >
+            <i data-lucide="layout-dashboard" class="size-5"></i>
+            <span>Dashboard</span>
+          </a>
+
+          <a
+            href="/agents/my_properties/?id={{ request.user.id }}"
+            class="flex items-center text-sm gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          >
+            <i data-lucide="map-pin-house" class="w-5 h-5"></i>
+            <span>My properties</span>
+          </a>
+          
+          <a
+            href="/agents/add_property/?id={{ request.user.id }}"
+            class="flex items-center text-sm my-3 gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          >
+            <i data-lucide="badge-plus" class="size-5"></i>
+            <span>Add Property</span>
+          </a>
+          
+          <a
+            href="#"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          >
+            <i data-lucide="messages-square" class="w-5 h-5"></i>
+            <span>Inquiries</span>
+          </a>
+          <a
+            href="/agents/settings/"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          >
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <!-- Sidebar Footer / User Profile -->
+        <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold text-indigo-300"
+            >
+              <img
+                src="https://api.dicebear.com/10.x/initials/svg?seed={{ request.user.name }}"
+                class="size-9 rounded-full text-sm ml-1"
+                alt="profile_name"
+              />
+            </div>
+            <div class="flex-1 overflow-hidden">
+              <h4 class="text-sm font-medium truncate">
+                {{ request.user.name }}
+              </h4>
+              <p class="text-xs text-slate-500 truncate">
+                {{ request.user.email }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <!-- TOP NAVBAR -->
+        <header
+          class="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6"
+        >
+          <!-- Hamburger Menu Button -->
+          <button
+            id="open-sidebar"
+            class="p-2 -ml-2 rounded-md hover:bg-gray-100 text-gray-600 md:hidden"
+            aria-label="Open Sidebar"
+          >
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+
+          <div class="text-sm font-medium text-gray-500">
+            <h2 class="text-xl font-medium">
+              Hello, {{ request.user.name }} !
+            </h2>
+          </div>
+          <div
+            class="w-8 h-8 rounded-full gap-2 mx-4.5 flex items-center justify-center text-xs font-bold text-indigo-700"
+          >
+        
+            <!-- Logout Button -->
+            <a href="/logout/" class="hidden md:block">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                />
+              </svg>
+            </a>
+          </div>
+
+        </header>
+
+        <!-- BODY CONTENT -->
+        <main class="flex-1 overflow-y-auto p-6">
+          {% block content %} {% endblock %}
+        </main>
+      </div>
+    </div>
+
+    <!-- JavaScript to Handle Toggle Behavior -->
+    {% block scripts %} {% endblock %}
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebar-backdrop");
+      const openBtn = document.getElementById("open-sidebar");
+      const closeBtn = document.getElementById("close-sidebar");
+
+      function toggleSidebar() {
+        const isOpen = sidebar.classList.contains("translate-x-0");
+
+        if (isOpen) {
+          // Close sidebar
+          sidebar.classList.remove("translate-x-0");
+          sidebar.classList.add("-translate-x-full");
+          // Hide backdrop
+          backdrop.classList.remove("opacity-100", "pointer-events-auto");
+          backdrop.classList.add("opacity-0", "pointer-events-none");
+        } else {
+          // Open sidebar
+          sidebar.classList.remove("-translate-x-full");
+          sidebar.classList.add("translate-x-0");
+          // Show backdrop
+          backdrop.classList.remove("opacity-0", "pointer-events-none");
+          backdrop.classList.add("opacity-100", "pointer-events-auto");
+        }
+      }
+
+      // Event Listeners
+      openBtn.addEventListener("click", toggleSidebar);
+      closeBtn.addEventListener("click", toggleSidebar);
+      backdrop.addEventListener("click", toggleSidebar);
+    </script>
+  </body>
+</html>

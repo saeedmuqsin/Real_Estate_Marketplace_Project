@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  {% load humanize %}
+  <body>
+    <div class="w-full mx-auto space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 items-start">
+        <!-- LEFT SIDEBAR: INQUIRIES LIST (4 cols) -->
+        <div
+          class="lg:col-span-5 xl:col-span-4 bg-white border border-slate-200/80 overflow-hidden flex flex-col h-screen"
+        >
+          <!-- TABS -->
+          <div
+            class="flex items-center border-b border-slate-100 text-xs font-medium px-2 pt-2 bg-white sticky top-0 z-10 overflow-x-auto"
+          >
+            <button
+              onclick="switchTab('all')"
+              id="tab-all"
+              class="tab-btn px-4 py-3 border-b-2 border-blue-600 font-semibold text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              All (<span id="count-all">6</span>)
+            </button>
+            <button
+              onclick="switchTab('unread')"
+              id="tab-unread"
+              class="tab-btn px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              Unread (<span id="count-unread">2</span>)
+            </button>
+            <button
+              onclick="switchTab('replied')"
+              id="tab-replied"
+              class="tab-btn px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              Replied (<span id="count-replied">3</span>)
+            </button>
+            <button
+              onclick="switchTab('closed')"
+              id="tab-closed"
+              class="tab-btn px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              Closed (<span id="count-closed">0</span>)
+            </button>
+          </div>
+
+          <div
+            id="inquiries-list"
+            class="divide-y divide-slate-100 overflow-y-auto flex-1"
+          >
+            {% for inquiry in inquiries %}
+
+            <div
+              onclick="selectInquiry(this)"
+              data-id="{{ inquiry.id }}"
+              data-prop-img="{% if inquiry.property.images.first %}data:{{ inquiry.property.images.first.image_type }};base64,{{ inquiry.property.images.first.image_base64 }}{% endif %}"
+              class="inquiry-card p-4 flex gap-3 cursor-pointer bg-slate-50/80 hover:bg-slate-50 transition-colors relative border-l-4 border-blue-600"
+            >
+              <div class="relative shrink-0">
+                {% with image=inquiry.property.images.first %}
+                <img
+                  src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+                  alt="Property"
+                  class="w-14 h-14 object-cover rounded-xl"
+                />
+                {% endwith %}
+                <img
+                  src="https://api.dicebear.com/10.x/initials/svg?seed={{ inquiry.profile.userId.name }}"
+                  class="absolute -top-1 -right-1 w-6 h-6 bg-purple-100 text-purple-700 font-semibold text-[10px] rounded-full flex items-center justify-center border-2 border-white"
+                />
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1">
+                  <h3 class="text-xs font-bold text-slate-900 truncate">
+                    {{ inquiry.profile.userId.name }}
+                  </h3>
+                  <span class="text-[10px] text-slate-400 shrink-0"
+                    >{{ inquiry.created_at|date:'h:i A, d M Y' }}</span
+                  >
+                </div>
+                <p
+                  class="text-[11px] font-medium text-slate-500 truncate mt-0.5"
+                >
+                  {{ inquiry.property.title }}
+                </p>
+                <div class="flex items-center justify-between gap-2 mt-1.5">
+                  <p class="text-[11px] text-slate-400 truncate">
+                    Hi, I'm interested in this property.
+                  </p>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <span
+                      class="px-2 py-0.5 bg-blue-50 text-blue-600 font-semibold text-[10px] rounded-md"
+                      >New</span
+                    >
+                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% empty %}
+            <div class="p-8 text-center text-xs text-slate-400">
+              No inquiries found.
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- CHAT PANEL / CONVERSATION PANEL -->
+        {% include "inquiries/ChatBox.html" %}
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+
+      function switchTab(tab) {
+        // Style tab buttons
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.classList.remove(
+            "border-blue-600",
+            "font-semibold",
+            "text-blue-600",
+          );
+          btn.classList.add("border-transparent", "text-slate-500");
+        });
+
+        const activeBtn = document.getElementById(`tab-${tab}`);
+        activeBtn.classList.remove("border-transparent", "text-slate-500");
+        activeBtn.classList.add(
+          "border-blue-600",
+          "font-semibold",
+          "text-blue-600",
+        );
+
+        // Filter inquiry items
+        const items = document.querySelectorAll(".inquiry-card");
+        items.forEach((item) => {
+          const itemStatus = item.getAttribute("data-status");
+          if (tab === "all") {
+            item.classList.remove("hidden");
+          } else if (itemStatus === tab) {
+            item.classList.remove("hidden");
+          } else {
+            item.classList.add("hidden");
+          }
+        });
+      }
+
+      // 1. SELECT INQUIRY & POPULATE CHAT PANEL
+      async function selectInquiry(card) {
+        // Highlight selected card
+        document.querySelectorAll(".inquiry-card").forEach((item) => {
+          item.classList.remove("bg-slate-50/80", "border-blue-600");
+          item.classList.add("border-transparent");
+        });
+        card.classList.add("bg-slate-50/80", "border-blue-600");
+        card.classList.remove("border-transparent");
+
+        // Extract attributes
+        const inquiryId = card.getAttribute("data-id");
+
+        async function fetchConversation() {
+          try {
+            const response = await fetch(
+              `http://127.0.0.1:8000/inquiries/conversation/${inquiryId}`,
+              {
+                method: "GET",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                credentials: "same-origin",
+              },
+            );
+
+            if (!response.ok) {
+              throw new Error(
+                `Network response was not ok (${response.status})`,
+              );
+            }
+
+            const data = await response.json();
+            document.getElementById("chat-client-name").innerText =
+              data.inquiry.agent_name;
+            document.getElementById("chat-client-email").innerText =
+              data.inquiry.agent_email;
+            document.getElementById("chat-client-phone").innerText =
+              data.inquiry.agent_phone;
+
+            const chatDate = new Date(data.inquiry.date);
+            document.getElementById("chat-date").innerText =
+              chatDate.toLocaleString([], {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+
+            document.getElementById("chat-client-avatar").src =
+              `https://api.dicebear.com/10.x/initials/svg?seed=${data.inquiry.agent_name}`;
+
+            document.getElementById("chat-status-badge").innerText =
+              data.inquiry.status;
+
+            document.getElementById("chat-prop-title").innerText =
+              data.inquiry.property.title;
+            document.getElementById("chat-prop-location").innerText =
+              data.inquiry.property.location;
+            document.getElementById("chat-prop-price").innerText =
+              `GH₵ ${data.inquiry.property.price.toLocaleString()}`;
+            data.inquiry.property.price;
+            document.getElementById("chat-prop-view-link").href =
+              `/properties/details/?property_id=${data.inquiry.property.id}`;
+            document.getElementById("chat-prop-img").src =
+              `data:${data.inquiry.property.image_type};base64,${data.inquiry.property.image_base64}`;
+
+            // Populate messages
+          } catch (error) {
+            console.error("Failed to fetch conversation:", error);
+            return null;
+          }
+        }
+        fetchConversation();
+
+        // connect to WebSocket for real-time updates
+        const customerId = "{{ request.user.id }}";
+        let InquirySocket = null;
+
+        function connectToChat() {
+          const protocol =
+            window.location.protocol === "https:" ? "wss://" : "ws://";
+
+          const socketUrl = `${protocol}${window.location.host}/ws/inquiries/${inquiryId}/`;
+
+          inquirySocket = new WebSocket(socketUrl);
+
+          inquirySocket.onopen = function (event) {
+            console.log("Connected to inquiry chat.");
+          };
+
+          inquirySocket.onmessage((event)=>{
+            console.log("Received message:", event.data);
+          })
+
+          function sendMessage(event) {
+            event.preventDefault();
+            const messageInput = document.getElementById("message-input");
+            const message = messageInput.value.trim();
+            if (message && inquirySocket.readyState === WebSocket.OPEN) {
+              inquirySocket.send(JSON.stringify({ message: message }));
+              messageInput.value = "";
+            }
+          }
+
+          sendMessage();
+        }
+
+        connectToChat();
+      }
+
+      // connection to WebSocket for real-time updates
+      document.addEventListener("DOMContentLoaded", () => {
+        const firstInquiryCard = document.querySelector(".inquiry-card");
+        if (firstInquiryCard) {
+          selectInquiry(firstInquiryCard);
+        }
+      });
+    </script>
+  </body>
+</html>

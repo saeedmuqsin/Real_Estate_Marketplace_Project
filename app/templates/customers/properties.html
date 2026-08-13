@@ -1,0 +1,96 @@
+{% extends "customers/base.html" %} 
+{% block head %}{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto py-5">
+    <h1 class="text-2xl text-black/70 px-4 font-bold mb-4">Properties</h1>
+
+    <!-- search box -->
+    <div class="container p-2 flex items-center justify-start gap-4">
+        <div class="bg-white/50 rounded-md px-6 py-4 w-[30%]">
+            <h2 class="text-xl text-black/70 font-bold mb-4">Filters</h2>
+            <form action="/customers/properties" method="get" class="space-y-4">
+                <div class="grid grid-cols-1 gap-3 ">
+                  <div class="my-2">
+                    <label for="location" class="block text-sm font-medium text-black/80">Location</label>
+                    <!-- <select id="location" name="location" class="col-start-1  row-start-1 w-full appearance-none rounded-md bg-white/5 py-2 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                      <option value="" {% if location == "" %}selected{% endif %}>All Locations</option>
+                      <option value="accra" {% if location == "accra" %}selected{% endif %}>Accra</option>
+                      <option value="kumasi" {% if location == "kumasi" %}selected{% endif %}>Kumasi</option>
+                      <option value="tema" {% if location == "tema" %}selected{% endif %}>Tema</option>
+                      <option value="takoradi" {% if location == "takoradi" %}selected{% endif %}>Takoradi</option>
+                    </select> -->
+                    <input
+                        id="location"
+                        type="text"
+                        name="location"
+                        placeholder="Search properties by name or location"
+                        required
+                        value="{{ location }}"
+                        class="block w-full rounded-md bg-white/70 px-3 py-1.5 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"/>
+                  </div>
+
+                  <div class="my-2">
+                    <label for="property_type" class="block text-sm font-medium text-black/80">Property Type</label>
+                    <select id="property_type" name="property_type" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                      <option value="" {% if property_type == "" %}selected{% endif %}>Any Type</option>
+                      <option value="House" {% if property_type == "House" %}selected{% endif %}>House</option>
+                      <option value="apartment" {% if property_type == "apartment" %}selected{% endif %}>Apartment</option>
+                      <option value="land" {% if property_type == "land" %}selected{% endif %}>Land</option>
+                      <option value="commercial" {% if property_type == "commercial" %}selected{% endif %}>Commercial</option>
+                    </select>
+                  </div>
+
+                  <div class="my-1">
+                    <label for="price_range" class="block text-sm font-medium text-black/80">Price Range</label>
+                    <select id="price_range" name="price_range" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                      <option value="" {% if price_range == "" %}selected{% endif %}>Any Price</option>
+                      <option value="100000" {% if price_range == "0-100000" %}selected{% endif %}>Under Ghc 100,000</option>
+                      <option value="300000" {% if price_range == "100000-300000" %}selected{% endif %}>Ghc 100,000 - 300,000</option>
+                      <option value="600000" {% if price_range == "300000-600000" %}selected{% endif %}>Ghc 300,000 - 600,000</option>
+                      <option value="600000" {% if price_range == "600000+" %}selected{% endif %}>Above Ghc 600,000</option>
+                    </select>
+                  </div>
+
+                  <div class="my-1">
+                    <label for="bedrooms" class="block text-sm font-medium text-black/80">Bedrooms</label>
+                    <select id="bedrooms" name="bedrooms" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                      <option value="" {% if bedrooms == "" %}selected{% endif %}>Any</option>
+                      <option value="1" {% if bedrooms == "1" %}selected{% endif %}>1</option>
+                      <option value="2" {% if bedrooms == "2" %}selected{% endif %}>2</option>
+                      <option value="3" {% if bedrooms == "3" %}selected{% endif %}>3</option>
+                      <option value="4" {% if bedrooms == "4" %}selected{% endif %}>4</option>
+                      <option value="5+" {% if bedrooms == "5+" %}selected{% endif %}>5+</option>
+                    </select>
+                  </div>
+
+                  <div class="my-1">
+                    <label for="bathrooms" class="block text-sm font-medium text-black/90">Bathrooms</label>
+                    <select id="bathrooms" name="bathrooms" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                      <option value="" {% if bathrooms == "" %}selected{% endif %}>Any</option>
+                      <option value="1" {% if bathrooms == "1" %}selected{% endif %}>1</option>
+                      <option value="2" {% if bathrooms == "2" %}selected{% endif %}>2</option>
+                      <option value="3" {% if bathrooms == "3" %}selected{% endif %}>3</option>
+                      <option value="4" {% if bathrooms == "4" %}selected{% endif %}>4</option>
+                      <option value="5+" {% if bathrooms == "5+" %}selected{% endif %}>5+</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Apply Filters</button>
+                  <button type="reset" class="border border-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-100 transition">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Properties List -->
+        {% include 'properties/properties_listings.html'%}
+    </div>
+    
+
+
+  </div>
+{% endblock %}
+
+{% block scripts %}{% endblock %}

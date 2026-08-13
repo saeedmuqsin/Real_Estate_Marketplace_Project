@@ -1,0 +1,78 @@
+{% load humanize %}
+
+  <style>
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #cfd0d1 #dbeafe;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #dbeafe;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #00000000;
+      border-radius: 9999px;
+      border: 2px solid #dbeafe;
+    }
+  </style>
+<div class="w-[70%] flex flex-wrap gap-7 items-center justify-center px-6 py-2  h-[520px] overflow-y-auto overflow-x-hidden custom-scrollbar">
+  
+    {% for property in properties %}
+     <div class="w-[90%] md:w-[40%] bg-white rounded-md mx p-2.5 shadow-sm">
+      {% with image=property.images.first %}
+      <img
+        class="rounded-md w-full h-[200px]"
+        src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+        alt="property_image"
+      />
+
+      {% endwith %}
+      <!-- Title and location -->
+      <div class="flex item-center justify-between">
+        <div class="block my-2">
+          <h3 class="text font-medium">{{ property.title }}</h3>
+          <p class="text-sm flex items-center text-black/50"><i data-lucide="map-pin" class="size-5 mr-0.5"></i> <span>{{ property.location }}</span></p>
+        </div>
+
+        <div class="block my-2 relative">
+           <h3 class="text-xl font-medium">GH₵ {{ property.price|intcomma }}</h3>
+           <p class="text-xs mt-1 text-center absolute right-1 px-2 py-1 rounded-md bg-blue-500 text-white w-1/2">{{ property.listing_type }}</p>
+        </div>
+      </div>
+
+      <!-- Property Feature -->
+      <div class="flex items-center gap-4 my-5">
+        <p class="bg-gray-100 px-1 py-2 flex items-center justify-center rounded-md w-full">
+          <i data-lucide="bed-double" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.bedrooms }} Beds</span>
+        </p>
+        
+        <p class="bg-gray-100 px-1 py-2 rounded-md flex items-center justify-center w-full">
+          <i data-lucide="shower-head" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.bedrooms }} Baths</span>
+        </p>
+
+        <p class="bg-gray-100 px-1 py-2 rounded-md flex items-center justify-center w-full">
+          <i data-lucide="square-dashed" class="size-4"></i>
+          <span class="mx-2 text-[13px]">{{ property.area_size }} sq</span>
+        </p>
+      </div>
+
+      <!-- View details button  -->
+      <div class="flex items-center w-full gap-4 mt-5 mb-3">
+        <a href="/properties/details/?property_id={{ property.id }}" class="bg-blue-500 font-noraml px-2 py-2.5 text-white w-full rounded-full hover:shadow-md text-md text-center">View Detail</a>
+        <a href="#" class="p-4 rounded-full bg-gray-100"><i data-lucide="heart" class="size-4"></i>  </a>
+      </div>
+
+    </div>
+    {% empty %}
+      <p class="text-2xl text-black/70 text-center -mt-40 font-medium">
+        No properties found.
+      </p>
+    {% endfor %}
+    <!-- Propertie Cards -->
+
+</div>

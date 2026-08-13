@@ -1,0 +1,102 @@
+<!-- DJANGO FLASH MESSAGES FLOATING CONTAINER -->
+<div class="fixed top-6 right-6 z-50 w-full max-w-sm px-4 sm:px-0 space-y-3 pointer-events-none">
+  {% if message %}
+    {% for message in messages %}
+      <div 
+        role="alert"
+        class="django-alert flex gap-3 w-full rounded-xl border p-4 shadow-lg backdrop-blur-md transition-all duration-300 ease-out transform translate-y-2 opacity-0 pointer-events-auto
+          {% if message.tags == 'success' %} border-emerald-100 bg-emerald-50/90 text-emerald-900
+          {% elif message.tags == 'error' or message.tags == 'danger' %} border-rose-100 bg-rose-50/90 text-rose-900
+          {% elif message.tags == 'warning' %} border-amber-100 bg-amber-50/90 text-amber-900
+          {% else %} border-sky-100 bg-sky-50/90 text-sky-900 {% endif %}"
+      >
+        <!-- Icon Mapping Based on Tag -->
+        <span class="shrink-0 
+          {% if message.tags == 'success' %} text-emerald-600
+          {% elif message.tags == 'error' or message.tags == 'danger' %} text-rose-600
+          {% elif message.tags == 'warning' %} text-amber-600
+          {% else %} text-sky-600 {% endif %}"
+        >
+          {% if message.tags == 'success' %}
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          {% elif message.tags == 'error' or message.tags == 'danger' %}
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+          {% elif message.tags == 'warning' %}
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          {% else %}
+            <i data-lucide="info" class="w-5 h-5"></i>
+          {% endif %}
+        </span>
+
+        <!-- Content Area -->
+        <div class="flex-1">
+          <h3 class="text-sm font-semibold 
+            {% if message.tags == 'success' %} text-emerald-950
+            {% elif message.tags == 'error' or message.tags == 'danger' %} text-rose-950
+            {% elif message.tags == 'warning' %} text-amber-950
+            {% else %} text-sky-950 {% endif %}"
+          >
+            {% if message.tags == 'success' %} Success
+            {% elif message.tags == 'error' or message.tags == 'danger' %} Error
+            {% elif message.tags == 'warning' %} Warning
+            {% else %} Notification {% endif %}
+          </h3>
+          <p class="mt-0.5 text-xs opacity-90 leading-relaxed">{{ message }}</p>
+        </div>
+
+        <!-- Manual Dismiss Button -->
+        <button 
+          class="close-alert-btn shrink-0 -mt-1 -mr-1 p-1 rounded-lg cursor-pointer focus:outline-hidden opacity-60 hover:opacity-100 transition-opacity"
+          aria-label="Dismiss alert"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize Lucide icons if you are using them
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    const alerts = document.querySelectorAll('.django-alert');
+
+    alerts.forEach((alert, index) => {
+      // Stagger entrance transitions slightly if multiple messages arrive
+      setTimeout(() => {
+        alert.classList.remove('translate-y-2', 'opacity-0');
+        alert.classList.add('translate-y-0', 'opacity-100');
+      }, index * 150);
+
+      // Setup Auto-Dismissal Timer (5000ms)
+      const autoDismissTimer = setTimeout(() => {
+        dismissAlert(alert);
+      }, 5000);
+
+      // Manual Dismissal click mapping
+      const closeBtn = alert.querySelector('.close-alert-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          clearTimeout(autoDismissTimer);
+          dismissAlert(alert);
+        });
+      }
+    });
+
+    // Helper to safely transition out and drop the element from layout space
+    function dismissAlert(alertEl) {
+      alertEl.classList.remove('translate-y-0', 'opacity-100');
+      alertEl.classList.add('translate-y-2', 'opacity-0');
+      
+      // Wait for the opacity transition curve to finish before clearing space
+      alertEl.addEventListener('transitionend', () => {
+        alertEl.remove();
+      });
+    }
+  });
+</script>

@@ -1,0 +1,568 @@
+{% extends "agents/base.html" %} {% block head %} {% endblock %} 
+{% block content %}
+
+<!-- Form component that handles property details -->
+<form
+  action="/properties/add_property/"
+  method="POST"
+  enctype="multipart/form-data"
+  class="w-full"
+>
+
+  {% csrf_token %}
+  <!-- header of the page -->
+  <div class="flex items-center justify-between px-2 py-3">
+    <div class="block">
+      <h2 class="text-xl font-medium text-black/80">Add Property</h2>
+      <p class="text-sm text-black/60">
+        Fill in the details below to list your property.
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <button
+      class="text-sm hover:bg-blue-400 flex items-center gap-1.5 bg-blue-500 text-white rounded-md p-2 px-5 cursor-pointer"
+      type="submit"
+    >
+      <i data-lucide="send" class="size-4 mt-0.5"></i>
+      <span>Publish Property</span>
+    </button>
+  </div>
+
+  <!-- Input Areas -->
+  <div class="grid grid-row grid-cols-2 gap-5 w-full">
+    <!-- Property Details -->
+    <div class="bg-white p-3 rounded-md border border-gray-200">
+      <!-- heading -->
+      <h2 class="flex items-center gap-3.5 px-4 py-2">
+        <i
+          data-lucide="house"
+          class="size-9 rounded-lg p-2 bg-blue-100 text-blue-500"
+        ></i>
+        <span class="text-lg font-medium text-black/80">Property Details</span>
+      </h2>
+
+      <!-- property-name  -->
+      <div class="block w-full pt-2 pb-2 px-4">
+        <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+          >Property Title</label
+        >
+        <input
+          type="text"
+          name="property_title"
+          required
+          placeholder="eg.Modern 3 Bedroom House."
+          class="block w-full rounded-md bg-white/5 px-3 py-1.5 mt-2 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+        />
+      </div>
+
+      <!-- Property Type & Listing Type -->
+      <div class="grid grid-cols-2 w-full">
+        <!-- Property Type -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label
+            for="property_type"
+            class="py-0.5 px-0.5 font-medium text-black/90"
+            >Property Type</label
+          >
+          <div class="mt-2 grid grid-cols-1">
+            <select
+              id="property_type"
+              name="property_type"
+              required
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            >
+              <option value="" selected>Select type</option>
+              <option value="House">House</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Commerical">Commerical</option>
+              <option value="Land">Land</option>
+              <option value="Villa">Villa</option>
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              data-slot="icon"
+              aria-hidden="true"
+              class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+            >
+              <path
+                d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Listing Type -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+            >Listing Type</label
+          >
+          <div class="mt-2 grid grid-cols-1">
+            <select
+              id="listing_type"
+              name="listing_type"
+              required
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            >
+              <option value="" selected>Select type</option>
+              <option value="Sale">For Sale</option>
+              <option value="Rent">For Rent</option>
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              data-slot="icon"
+              aria-hidden="true"
+              class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+            >
+              <path
+                d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price & Bedrooms -->
+      <div class="grid grid-cols-2 w-full">
+        <!-- Price -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+            >Price (GHS)</label
+          >
+          <input
+            type="text"
+            name="price"
+            placeholder="e.g 250000"
+            required
+            class="block w-full rounded-md bg-white/5 px-3 py-1.5 mt-2 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+          />
+        </div>
+
+        <!-- Bedrooms -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+            >Bedrooms</label
+          >
+          <div class="mt-2 grid grid-cols-1">
+            <select
+              id="Bedrooms"
+              name="bedrooms"
+              required
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            >
+              <option value="0" selected>Select type</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              data-slot="icon"
+              aria-hidden="true"
+              class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+            >
+              <path
+                d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bathrooms & Furnishing -->
+      <div class="grid grid-cols-2 w-full">
+        <!-- Bathrooms -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label
+            for="property_type"
+            class="py-0.5 px-0.5 font-medium text-black/90"
+            >Bathrooms</label
+          >
+          <div class="mt-2 grid grid-cols-1">
+            <select
+              id="bathroom"
+              name="bathrooms"
+              required
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            >
+              <option value="" selected>Select type</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              data-slot="icon"
+              aria-hidden="true"
+              class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+            >
+              <path
+                d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Furnishing -->
+        <div class="block w-full pt-4.5 pb-2 px-4">
+          <label
+            for="furnishing"
+            class="py-0.5 px-0.5 font-medium text-black/90"
+            >Furnishing</label
+          >
+          <div class="mt-2 grid grid-cols-1">
+            <select
+              id="furnishing"
+              name="furnishing"
+              required
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-black/80 outline-1 -outline-offset-1 outline-gray-200 *:bg-white focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            >
+              <option value="" selected>Select type</option>
+              <option value="Sale">Full Furnished</option>
+              <option value="Rent">Partly Furnished</option>
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              data-slot="icon"
+              aria-hidden="true"
+              class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+            >
+              <path
+                d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="w-full px-4 py-4.5">
+        <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+          >Description</label
+        >
+        <textarea
+          id="about"
+          placeholder="Describe your property, features and unique selling points..."
+          name="description"
+          required
+          rows="5"
+          class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black/70 outline-1 -outline-offset-1 outline-black/10 mt-2.5 placeholder:text-black/50 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Image Details -->
+    <div class="block">
+      <!-- Image upload -->
+      <div
+        class="rounded-xl border border-gray-200 bg-white p-6 font-sans mx-auto"
+      >
+        <!-- Header Section -->
+        <div class="mb-4 flex items-start gap-3">
+          <div class="rounded-lg bg-blue-50 p-2 text-blue-600">
+            <svg
+              xmlns="http://w3.org"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-5 w-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg text-gray-900">Property Images</h3>
+            <p class="text-xs text-gray-500">
+              Upload high quality images of your property.
+            </p>
+          </div>
+        </div>
+
+        <!-- Hidden Native File Input -->
+        <input
+          type="file"
+          id="property_images"
+          name="property_images"
+          multiple
+          accept="image/jpeg, image/png, image/webp"
+          class="hidden"
+        />
+
+        <!-- Drag and Drop Dropzone -->
+        <div
+          id="dropzone"
+          class="transition-all duration-200 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50/50 py-10 px-4 text-center cursor-pointer hover:bg-gray-50 hover:border-blue-400 group"
+        >
+          <div
+            class="mb-3 text-blue-500 group-hover:scale-110 transition-transform duration-200"
+          >
+            <svg
+              xmlns="http://w3.org"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-8 w-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+              />
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-gray-700">
+            Drag & drop images here
+          </p>
+          <span class="my-1.5 text-xs text-gray-400">or</span>
+          <button
+            type="button"
+            id="browseBtn"
+            class="pointer-events-none rounded-lg border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 shadow-sm group-hover:border-gray-300"
+          >
+            Browse Files
+          </button>
+        </div>
+
+        <!-- Info Footer text -->
+        <div
+          class="mt-3 flex justify-between items-center text-xs text-gray-400"
+        >
+          <p>You can upload up to 10 images (JPG, PNG, WebP)</p>
+          <p id="counter">0/10</p>
+        </div>
+
+        <!-- Uploaded Preview Grid -->
+        <div id="previewGrid" class="mt-4 grid grid-cols-4 gap-3">
+          <!-- Dynamic items insert here -->
+
+          <!-- Permanent Add More Button -->
+          <button
+            type="button"
+            id="addMoreBtn"
+            class="flex aspect-square items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 focus:outline-none transition-colors"
+          >
+            <svg
+              xmlns="http://w3.org"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Additional Details -->
+      <div class="w-full bg-white p-3 rounded-md mt-5 border border-gray-200">
+        <!-- header -->
+        <h2 class="flex items-center gap-3.5 px-4 py-2">
+          <i
+            data-lucide="circle-alert"
+            class="size-9 rounded-lg p-2 bg-blue-100 text-blue-500"
+          ></i>
+          <span class="text-lg font-medium text-black/80"
+            >Additional Details</span
+          >
+        </h2>
+
+        <!-- Area and location -->
+        <div class="grid grid-cols-2 w-full">
+          <!-- Location -->
+          <div class="block w-full pt-2 pb-2 px-4">
+            <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+              >Area/Neigborhood</label
+            >
+            <input
+              type="text"
+              name="location"
+              placeholder="eg. East Legon"
+              required
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 mt-2 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+            />
+          </div>
+
+          <!-- Property Size -->
+          <div class="block w-full pt-2 pb-2 px-4">
+            <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+              >Property Size(sqm)</label
+            >
+            <input
+              type="text"
+              name="area_size"
+              placeholder="eg.300"
+              required
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 mt-2 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+            />
+          </div>
+        </div>
+
+        <div class="block w-full pt-2 pb-2 px-4">
+          <label for="" class="py-0.5 px-0.5 font-medium text-black/90"
+            >Google Map link (optional)</label
+          >
+          <input
+            type="text"
+            name="google_map_link"
+            placeholder="Paste Google Maps link here."
+            class="block w-full rounded-md bg-white/5 px-3 py-1.5 mt-2 text-base text-black/80 outline-1 -outline-offset-1 outline-black/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-black/10 sm:text-sm/6"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %} {% block scripts %}
+<script>
+  const MAX_IMAGES = 10;
+  let uploadedFiles = [];
+
+  const dropzone = document.getElementById("dropzone");
+  const fileInput = document.getElementById("property_images");
+  const previewGrid = document.getElementById("previewGrid");
+  const addMoreBtn = document.getElementById("addMoreBtn");
+  const counter = document.getElementById("counter");
+
+  // Trigger file manager click
+  dropzone.addEventListener("click", () => fileInput.click());
+  addMoreBtn.addEventListener("click", () => fileInput.click());
+
+  // Handle Drag & Drop styling states
+  ["dragenter", "dragover"].forEach((eventName) => {
+    dropzone.addEventListener(
+      eventName,
+      (e) => {
+        e.preventDefault();
+        dropzone.classList.add("border-blue-500", "bg-blue-50/50");
+      },
+      false,
+    );
+  });
+
+  ["dragleave", "drop"].forEach((eventName) => {
+    dropzone.addEventListener(
+      eventName,
+      (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("border-blue-500", "bg-blue-50/50");
+      },
+      false,
+    );
+  });
+
+  // Handle dropped files
+  dropzone.addEventListener("drop", (e) => {
+    handleFiles(e.dataTransfer.files);
+  });
+
+  // Handle selected files
+  fileInput.addEventListener("change", (e) => {
+    handleFiles(e.target.files);
+  });
+
+  function handleFiles(files) {
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    Array.from(files).forEach((file) => {
+      if (uploadedFiles.length >= MAX_IMAGES) return;
+      if (!validTypes.includes(file.type)) return;
+
+      uploadedFiles.push(file);
+    });
+
+    updateFileInput();
+    renderPreviews();
+  }
+
+  function updateFileInput() {
+    const dataTransfer = new DataTransfer();
+
+    uploadedFiles.forEach((file) => {
+      dataTransfer.items.add(file);
+    });
+
+    fileInput.files = dataTransfer.files;
+  }
+
+  function removeImage(index) {
+    uploadedFiles.splice(index, 1);
+    updateFileInput();
+    renderPreviews();
+  }
+
+  function renderPreviews() {
+    // Remove all existing image previews (keep the addMoreBtn)
+    const existingPreviews = previewGrid.querySelectorAll(".image-preview");
+    existingPreviews.forEach((el) => el.remove());
+
+    // Generate structure for uploaded files
+    uploadedFiles.forEach((file, index) => {
+      const url = URL.createObjectURL(file);
+
+      const wrapper = document.createElement("div");
+      wrapper.className =
+        "image-preview relative aspect-square overflow-hidden rounded-xl bg-gray-100 group/item";
+
+      wrapper.innerHTML = `
+        <img src="${url}" class="h-full w-full object-cover" />
+        <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 p-1 bg-black/60 rounded-full text-white opacity-0 group-hover/item:opacity-100 transition-opacity duration-150 hover:bg-black/80">
+          <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      `;
+
+      // Insert preview right before the "Add More" button
+      previewGrid.insertBefore(wrapper, addMoreBtn);
+    });
+
+    // Sync metrics counter
+    counter.textContent = `${uploadedFiles.length}/${MAX_IMAGES}`;
+
+    // Manage add button visibility limits
+    if (uploadedFiles.length >= MAX_IMAGES) {
+      addMoreBtn.classList.add("hidden");
+    } else {
+      addMoreBtn.classList.remove("hidden");
+    }
+  }
+</script>
+{% endblock %}

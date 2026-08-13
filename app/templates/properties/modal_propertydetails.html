@@ -1,0 +1,255 @@
+<!-- components/property_modal.html -->
+
+{% load humanize %}
+<div
+  id="property-modal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto opacity-0 pointer-events-none transition-opacity duration-300"
+>
+  <!-- Backdrop -->
+  <div
+    onclick="closePropertyModal()"
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+  ></div>
+
+  <!-- Modal Card -->
+  <div
+    class="relative w-1/2 bg-white rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300 ease-out"
+    id="modal-card"
+  >
+    <!-- Modal Header -->
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white sticky top-0 z-20"
+    >
+      <h3 class="font-bold text-slate-900 text-base">Property Details</h3>
+      <button
+        onclick="closePropertyModal()"
+        class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Body Container -->
+    <div class="p-6 overflow-y-auto space-y-6 text-slate-800">
+      <!-- Main Image Display + Status Badge -->
+      <div
+        class="relative rounded-2xl overflow-hidden aspect-16/10 bg-slate-100 border border-slate-100"
+      >
+        <img
+          id="modal-img"
+          src=""
+          alt="Property"
+          class="w-full h-full object-cover transition-all duration-200"
+        />
+
+        <span
+          id="modal-status-badge"
+          class="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur-xs font-semibold text-xs rounded-lg border shadow-xs capitalize"
+        ></span>
+      </div>
+
+      <!-- DYNAMIC THUMBNAILS GALLERY -->
+      <div id="modal-thumbnails" class="grid grid-cols-4 gap-2">
+        <!-- Thumbnails injected dynamically by JS -->
+      </div>
+      <!-- Title, Location & Price -->
+      <div>
+
+        <h2 id="modal-title" class="text-2xl font-medium"></h2>
+        <p class="flex items-center gap-1 text-slate-400 text-md mt-1">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+          <span id="modal-location"></span>
+        </p>
+        <div
+          id="modal-price"
+          class="text-xl font-medium text-slate-900 mt-2"
+        >
+       
+    </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <h4
+          class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2"
+        >
+          Description
+        </h4>
+        <p
+          id="modal-description"
+          class="text-sm block text-slate-500 font-normal"
+        ></p>
+      </div>
+
+      <!-- Additional Information -->
+      <div>
+        <h4
+          class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3"
+        >
+          Additional Information
+        </h4>
+        <div class="space-y-2 text-xs">
+            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
+              <span class="text-gray-400">Property Type</span>
+              <span id="modal-property_type" class="font-medium text-slate-800"></span>
+            </div>
+
+            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
+              <span class="text-gray-400">Listing Type</span>
+              <span id="modal-listing_type" class="font-medium text-slate-800"></span>
+            </div>
+
+            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
+              <span class="text-gray-400">Property ID</span>
+              <span id="modal-property_id" class="font-medium text-slate-800"></span>
+            </div>
+
+            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
+              <span class="text-gray-400">Added On</span>
+              <span id="modal-date" class="font-medium text-slate-800"></span>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div
+      class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3 text-xs"
+    >
+      <a
+        id="modal-edit-link"
+        href="#"
+        class="flex-1 py-2.5 px-4 bg-white border border-slate-200 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 shadow-2xs"
+      >
+        <i data-lucide="edit-3" class="w-4 h-4 text-slate-500"></i>
+        Edit Property
+      </a>
+      <a
+        id="modal-delete-link"
+        href="#"
+        class="flex-1 py-2.5 px-4 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl font-medium hover:bg-rose-100/80 transition-colors flex items-center justify-center"
+      >
+        Delete Property
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Helper to swap main preview image and update border highlighting
+  function selectMainImage(base64Uri, thumbElement) {
+    const mainImg = document.getElementById('modal-img');
+    mainImg.src = base64Uri;
+
+    // Reset styles on all generated thumbnails
+    document.querySelectorAll('#modal-thumbnails img').forEach(img => {
+      img.classList.remove('ring-2', 'ring-blue-600', 'opacity-100');
+      img.classList.add('opacity-70');
+    });
+
+    // Highlight active thumbnail
+    if (thumbElement) {
+      thumbElement.classList.remove('opacity-70');
+      thumbElement.classList.add('ring-2', 'ring-blue-600', 'opacity-100');
+    }
+  }
+
+  function openPropertyModal(btn) {
+    // 1. Read data attributes
+    const title = btn.getAttribute('data-title');
+    const location = btn.getAttribute('data-location');
+    const property_type = btn.getAttribute("data-property_type")
+    const listing_type = btn.getAttribute("data-listing_type")
+    const property_id = btn.getAttribute('data-property_id')
+    const price = btn.getAttribute('data-price');
+    const date = btn.getAttribute('data-date');
+    const status = btn.getAttribute('data-status');
+    const description = btn.getAttribute('data-description');
+    const editUrl = btn.getAttribute('data-edit-url');
+    const deleteUrl = btn.getAttribute('data-delete-url');
+
+    // 2. Read and split raw Base64 image strings by ||
+    const rawImages = btn.getAttribute('data-images') || '';
+    const imagesList = rawImages ? rawImages.split('||').map(s => s.trim()).filter(Boolean) : [];
+
+    // Populate dynamic text fields
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-location').innerText = location;
+    document.getElementById('modal-price').innerText = price;
+    document.getElementById('modal-date').innerText = date;
+    document.getElementById('modal-description').innerText = description;
+    document.getElementById('modal-edit-link').href = editUrl;
+    document.getElementById('modal-delete-link').href = deleteUrl;
+    document.getElementById("modal-property_type").innerText = property_type;
+    document.getElementById("modal-property_id").innerText = property_id;
+    document.getElementById("modal-listing_type").innerText = listing_type
+    document.getElementById('modal-delete-link').href = deleteUrl
+
+    // 3. Build Main Image & Thumbnail Grid
+    const mainImg = document.getElementById('modal-img');
+    const thumbsContainer = document.getElementById('modal-thumbnails');
+    thumbsContainer.innerHTML = ''; // Clear previous thumbnails
+
+    if (imagesList.length > 0) {
+      // Set initial main display image to the first property image
+      mainImg.src = imagesList[0];
+
+      // Generate clickable thumbnail elements
+      imagesList.forEach((base64DataUrl, index) => {
+        const thumb = document.createElement('img');
+        thumb.src = base64DataUrl;
+        thumb.alt = `Thumbnail ${index + 1}`;
+        thumb.className = `w-full h-16 object-cover rounded-xl border border-slate-100 cursor-pointer transition-all ${
+          index === 0 ? 'ring-2 ring-blue-600 opacity-100' : 'opacity-70 hover:opacity-100'
+        }`;
+        
+        // Swap main image on thumbnail click
+        thumb.onclick = () => selectMainImage(base64DataUrl, thumb);
+        thumbsContainer.appendChild(thumb);
+      });
+
+      thumbsContainer.classList.remove('hidden');
+    } else {
+      // Fallback placeholder if property has no uploaded images
+      mainImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500' fill='%23f1f5f9'><rect width='100%' height='100%'/><text x='50%' y='50%' font-size='18' text-anchor='middle' fill='%2394a3b8'>No Images Available</text></svg>";
+      thumbsContainer.classList.add('hidden');
+    }
+
+    // 4. Status Badge Styling
+    const statusBadge = document.getElementById('modal-status-badge');
+    statusBadge.innerText = status;
+    if (status === 'active') {
+      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/50 font-semibold text-xs rounded-lg shadow-xs";
+    } else if (status === 'pending') {
+      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200/50 font-semibold text-xs rounded-lg shadow-xs";
+    } else {
+      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-purple-50 text-purple-600 border border-purple-200/50 font-semibold text-xs rounded-lg shadow-xs";
+    }
+
+    // 5. Open Modal with Animation
+    const modal = document.getElementById('property-modal');
+    const modalCard = document.getElementById('modal-card');
+
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100');
+    modalCard.classList.remove('scale-95');
+    modalCard.classList.add('scale-100');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  function closePropertyModal() {
+    const modal = document.getElementById('property-modal');
+    const modalCard = document.getElementById('modal-card');
+
+    modalCard.classList.remove('scale-100');
+    modalCard.classList.add('scale-95');
+    modal.classList.remove('opacity-100');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePropertyModal();
+  });
+</script>

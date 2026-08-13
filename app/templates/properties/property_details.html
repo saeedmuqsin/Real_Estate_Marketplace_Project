@@ -1,0 +1,129 @@
+{% extends 'customers/base.html' %} {% block head %} {% endblock %} 
+{% block content %} {% load humanize %}
+<div class="container mx-auto p-5 block">
+  <a
+    href="/customers/properties"
+    class="text-black/70 text-md flex items-center gap-2"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-4 mt-0.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+      />
+    </svg>
+
+    <span>Back to result</span>
+  </a>
+
+  <!-- details -->
+  <div class="w-full flex items-start gap-6 p-5 my-2.5">
+    <!-- images section -->
+    <div class="w-2/5">
+      <!-- Main Large Image Display (Added id="main-display") -->
+      {% with image=property.images.first %}
+      <img
+        id="main-display"
+        class="rounded-md w-full h-[300px]"
+        src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+        alt="property_image"
+      />
+      {% endwith %}
+
+      <!-- Image selection / Thumbnails -->
+      <div class="flex items-center flex-wrap gap-5 my-5 p-2">
+        {% for image in property.images.all %}
+        <!-- Thumbnail 1 (Added onclick function) -->
+        <button
+          onclick="changeImage('data:{{ image.image_type }};base64,{{ image.image_base64 }}')"
+        >
+          <img
+            class="rounded-md size-15 object-cover hover:opacity-80 transition"
+            src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+            alt="property_image"
+          />
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Property Details -->
+    <div class="w-3/5 p-1 block">
+      <!-- Property Title and Price -->
+      <div class="flex items-start justify-between w-full  p-2">
+
+        <!-- title and location  -->
+        <div class="block">
+          <h2 class="text-[24px] font-medium text-black/70">{{ property.title }}</h2>
+          <p class="text-lg flex items-center font-normal text-black/60">
+            <i data-lucide="map-pin" class="size-4"></i>
+            <span>{{ property.location }}, Ghana.</span>
+          </p>
+        </div>
+        
+        <!-- price  -->
+        <div class="block text-right">
+          <h2 class="text-[25px] font-medium text-black/70">GH₵ {{ property.price | intcomma }}</h2>
+          <p class="bg-blue-500 text-center text-sm p-1 text-white w-1/3 rounded-lg float-right">{{ property.listing_type }}</p>
+        </div>
+
+      </div>
+
+      <!-- Description -->
+      <div class="px-2 my-5">
+        <h1 class="text-lg font-medium my-1">Description</h1>
+        <p class="text-black/70">
+          {{ property.description }}
+        </p>
+      </div>
+
+      <!-- Features and location map -->
+      <div class=" w-full gap-5 p-2 flex items-start justify-between">
+        <!-- features of the property -->
+        <div class="w-1/2 grid grid-row-1 gap-4 grid-cols-2">
+          <p class="bg-white px-3 py-2 flex items-center justify-center rounded-md w-full">
+            <i data-lucide="bed-double" class="size-5"></i>
+            <span class="mx-2 text-[16px]">{{ property.bedrooms }} Beds</span>
+          </p>
+
+          <p class="bg-white px-3 py-2 flex items-center justify-center rounded-md w-full">
+            <i data-lucide="shower-head" class="size-5"></i>
+            <span class="mx-2 text-[16px]">{{ property.bathrooms }} Bathrooms</span>
+          </p>
+
+          <p class="bg-white px-3 py-2 flex items-center justify-center rounded-md w-full">
+            <i data-lucide="square-dashed" class="size-5"></i>
+            <span class="mx-2 text-[16px]">{{ property.area_size }} m<sup class="mt-2 font-bold">2</sup></span>
+          </p>
+
+        </div>
+
+        <!-- location map -->
+        <div class="w-1/2 rounded-lg">
+          <iframe class="w-full rounded-lg" src="{{ property.google_map_link }}" width="600" height="120" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+
+      <!-- Call and message button  -->
+       <div class="flex items-center mt-10 px-2 gap-3">
+        <a href="{% url 'inquiries:start_inquiry' property.id %}" class="border-3 text-center text-blue-500 rounded-3xl border-blue-500 p-3 font-medium text-lg w-full">Message</a>
+        <a href="" class="p-3 text-lg bg-blue-500 w-[20%] rounded-3xl text-white w-full font-medium text-center">Call</a>
+       </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  function changeImage(imageSrc) {
+    document.getElementById("main-display").src = imageSrc;
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% load humanize %}
+
+<div
+  class="w-full h mx-auto bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden"
+>
+  <!-- TOP TAB NAVIGATION -->
+  <div
+    class="border-b border-slate-200/80 px-6 pt-4 flex flex-wrap gap-8 text-sm font-medium"
+  >
+    <button
+      onclick="filterProperties('all', this)"
+      class="tab-btn pb-3 border-b-2 border-blue-600 text-blue-600 font-semibold cursor-pointer"
+    >
+      All ({{ count_all }})
+    </button>
+    <button
+      onclick="filterProperties('active', this)"
+      class="tab-btn pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer"
+    >
+      Active ({{ count_active }})
+    </button>
+    <button
+      onclick="filterProperties('pending', this)"
+      class="tab-btn pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer"
+    >
+      Pending ({{ count_pending }})
+    </button>
+    <button
+      onclick="filterProperties('sold', this)"
+      class="tab-btn pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer"
+    >
+      Sold / Rented ({{ count_sold }})
+    </button>
+  </div>
+
+  <!-- TABLE AREA -->
+  <div class="overflow-x-auto">
+    <table class="w-full h-full text-left border-collapse">
+      <thead>
+        <tr
+          class="text-xs font-semibold text-slate-500 border-b border-slate-100 bg-slate-50/50"
+        >
+          <th class="py-3.5 px-6">Property</th>
+          <th class="py-3.5 px-6">Status</th>
+          <th class="py-3.5 px-6">Price</th>
+          <th class="py-3.5 px-6 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="property-table-body" class="divide-y divide-slate-100 text-sm">
+        {% for property in properties %}
+        <tr
+          class="property-row hover:bg-slate-50/80 transition-colors"
+          data-status="{{ property.status|lower }}"
+        >
+          <!-- Property Details -->
+          <td class="py-4 px-6">
+            <div class="flex items-center gap-4">
+              {% with image=property.images.first %} {% if image %}
+              <img
+                src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+                alt="{{ property.title }}"
+                class="w-16 h-12 object-cover rounded-xl border border-slate-100 shadow-xs shrink-0"
+              />
+              {% else %}
+              <div
+                class="w-16 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 text-xs shrink-0"
+              >
+                No Image
+              </div>
+              {% endif %}{% endwith %}
+              <div>
+                <h4 class="font-bold text-slate-900 leading-snug">
+                  {{ property.title }}
+                </h4>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  {{ property.location }}
+                </p>
+                <p class="text-xs text-slate-400">
+                  {{ property.created_at|date:"d M, Y" }}
+                </p>
+              </div>
+            </div>
+          </td>
+
+          <!-- Status Badge -->
+          <td class="py-4 px-6">
+            {% if property.status == 'active' %}
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200/50"
+              >Active</span
+            >
+            {% elif property.status == 'pending' %}
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-600 border border-amber-200/50"
+              >Pending</span
+            >
+            {% elif property.status == 'sold' or property.status == 'rented' %}
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-purple-50 text-purple-600 border border-purple-200/50"
+              >Sold / Rented</span
+            >
+            {% endif %}
+          </td>
+
+          <!-- Price -->
+          <td class="py-4 px-6 font-medium text-slate-900">
+            GH₵{{ property.price | intcomma }}
+          </td>
+
+          <!-- Actions Dropdown -->
+          <td class="py-4 px-6 text-right relative">
+              <button
+                class="bg-blue-500 text-white px-4 py-2 text-sm rounded-md"
+                data-title="{{ property.title }}"
+                data-location="{{ property.location }}"
+                data-price="GH₵{{ property.price | intcomma }}"
+                data-property_type = "{{ property.property_type }}"
+                data-listing_type = "For {{ property.listing_type }}"
+                data-property_id = "{{ property.id }}"
+                data-date="{{ property.created_at|date:'d M, Y' }}"
+                data-status="{{ property.status }}"
+                data-description="{{ property.description|default:'No description available.' }}"
+                data-images="{% for img in property.images.all %}data:{{ img.image_type }};base64,{{ img.image_base64 }}{% if not forloop.last %}||{% endif %}{% endfor %}"
+                data-edit-url=""
+                data-delete-url="{% url 'properties:delete_property' id=property.id %}"
+                onclick="openPropertyModal(this)"
+              >
+                
+                View
+            </button>
+        </td>
+        {% include "properties/modal_propertydetails.html" %}
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="py-8 text-center text-slate-400">
+            <h2 class="text-center my-7.5 text-black/60">
+              No recent properties available
+            </h2>
+          </td>
+
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- function for the component -->
+<script>
+  function filterProperties(category, btn) {
+    // 1. Highlight Active Tab
+    document.querySelectorAll(".tab-btn").forEach((tab) => {
+      tab.classList.remove("border-blue-600", "text-blue-600", "font-semibold");
+      tab.classList.add("border-transparent", "text-slate-500");
+    });
+    btn.classList.remove("border-transparent", "text-slate-500");
+    btn.classList.add("border-blue-600", "text-blue-600", "font-semibold");
+
+    // 2. Hide / Show HTML Rows based on data-status attribute
+    const rows = document.querySelectorAll(".property-row");
+    rows.forEach((row) => {
+      const status = row.getAttribute("data-status");
+      if (category === "all" || status === category) {
+        row.classList.remove("hidden");
+      } else {
+        row.classList.add("hidden");
+      }
+    });
+  }
+
+  function toggleActionMenu(id, e) {
+    e.stopPropagation();
+    document.querySelectorAll(".action-dropdown").forEach((el) => {
+      if (el.id !== `dropdown-${id}`) el.classList.add("hidden");
+    });
+    document.getElementById(`dropdown-${id}`).classList.toggle("hidden");
+  }
+
+  document.addEventListener("click", () => {
+    document
+      .querySelectorAll(".action-dropdown")
+      .forEach((el) => el.classList.add("hidden"));
+  });
+</script>
