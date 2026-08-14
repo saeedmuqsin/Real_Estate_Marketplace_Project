@@ -8,5 +8,6 @@ urlpatterns = [
     path('dashboard/', view=views.agents_dashboard, name="agents_dashboard"),
     path('add_property/', view=views.add_property, name="add_property"),
     path("my_properties/", view=views.my_properties, name="my_properties"),
-    path("settings/", view = views.settings, name="settings")
+    path("inquiries/", view = views.inquiries, name="inquiries"),
+    path("settings/", view = views.settings, name="settings"),
 ]

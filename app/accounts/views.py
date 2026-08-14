@@ -22,6 +22,10 @@ def login(request):
             auth_login(request, existingAccount)
             return redirect(reverse("agents:agents_dashboard")+f"?id={existingAccount.id}")
 
+        elif  existingAccount and existingAccount.role == "admin":
+            auth_login(request, existingAccount)
+            return redirect("Admin:admin_dashboard")
+
         else:
             messages.info(request,"Account does'nt exist. create new account")
             return redirect("accounts:login")

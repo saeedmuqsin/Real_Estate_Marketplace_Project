@@ -1,0 +1,232 @@
+{% extends 'admin/base.html' %} {% load humanize %} {% block head %} 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+{% endblock %} {% block content %}
+<div class="grid grid-row-1 grid-cols-4 w-full p-2 -mt-2.5 gap-5">
+  <!-- Card - 1 -->
+  <div class="bg-white p-5 rounded-sm shadow flex items-center justify-between">
+    <div class="block">
+      <h2 class="font-medium text-black/70 text-md">Total Properties</h2>
+      <p class="text-2xl font-medium">{{ total_properties }}</p>
+    </div>
+    <i data-lucide="house" class="mx-3 size-8 text-blue-500"></i>
+  </div>
+
+  <!-- Card - 2 -->
+  <div class="bg-white p-5 rounded-sm shadow flex items-center justify-between">
+    <div class="block">
+      <h2 class="font-medium text-black/70 text-md">Total Agents</h2>
+      <p class="text-2xl font-medium">{{ total_agents }}</p>
+    </div>
+    <i data-lucide="user-shield" class="mx-3 size-8 text-green-500"></i>
+  </div>
+
+  <!-- Card - 3 -->
+  <div class="bg-white p-5 rounded-sm shadow flex items-center justify-between">
+    <div class="block">
+      <h2 class="font-medium text-black/70 text-md">Total Customers</h2>
+      <p class="text-2xl font-medium">{{ total_customers }}</p>
+    </div>
+    <i data-lucide="users" class="mx-3 size-8 text-yellow-500"></i>
+  </div>
+
+  <!-- Card - 4 -->
+  <div class="bg-white p-5 rounded-sm shadow flex items-center justify-between">
+    <div class="block">
+      <h2 class="font-medium text-black/70 text-md">Total Inquiries</h2>
+      <p class="text-2xl font-medium">{{ total_inquiries }}</p>
+    </div>
+    <i data-lucide="messages-square" class="mx-3 size-8 text-red-500"></i>
+  </div>
+</div>
+
+<!--  -->
+<div class="grid grid-row-1 grid-cols-2 mx-3 my-3 gap-5">
+  <!-- Recents users -->
+  <div class="bg-white p-2 h-[470px] overflow-auto scrollbar-thin">
+    <div class="flex items-center justify-between px-1">
+      <h3 class="text-xl font-medium p-2 text-black/70">Recent Listings</h3>
+      <a href="" class="text-none text-md text-blue-400 mx-2">View all</a>
+    </div>
+    <hr class="text-gray-100" />
+    {% for property in recent_properties %}
+    <div class="p-3 flex items-center gap-2">
+      <div class="w-1/5">
+        {% with image=property.images.first %} {% if image %}
+        <img
+          class="size-20 w-full rounded-md"
+          src="data:{{ image.image_type }};base64,{{ image.image_base64 }}"
+          alt="{{ property.title }}"
+        />
+        {% endif %} {% endwith %}
+      </div>
+      <div class="w-3/5 block mx-5">
+        <h3 class="text-xl font-medium font-sans">
+          GH₵ {{ property.price | intcomma }}
+        </h3>
+        <p class="text-md font-sans">{{ property.title }}</p>
+        <p class="text-sm font-sans text-black/60 font-medium">
+          {{ property.location }}
+        </p>
+      </div>
+      <div class="w-1/5">
+        {% if property.status == "active" %}
+        <p
+          class="bg-green-50 p-3 text-sm bg-green-50 text-green-500 text-center font-medium rounded-md"
+        >
+          {{ property.status | capfirst }}
+        </p>
+
+        {% else %}
+        <p
+          class="bg-yellow-50 p-3 text-sm text-yellow-500 text-center font-medium rounded-md"
+        >
+          {{ property.status | capfirst }}
+        </p>
+        {% endif %}
+        <p class="text-sm text-black/40 block mt-5">
+          {{ property.created_at |date:"M d, Y" }}
+        </p>
+      </div>
+    </div>
+    <hr class="my-3 text-black/5" />
+    {% empty %}
+    <h2 class="text-center my-7.5 text-black/60">
+      No recent properties available
+    </h2>
+
+    {% endfor %}
+  </div>
+
+
+
+  <div class="bg-white p-5 rounded-sm shadow">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-medium text-black/70">Properties & Inquiries (Monthly)</h3>
+      <a href="#" class="text-md text-blue-400 hover:text-blue-600">View analytics</a>
+    </div>
+    <hr class="text-gray-100 mb-4" />
+    <div style="position: relative; height: 400px;">
+      <canvas id="propertiesInquiriesChart"></canvas>
+    </div>
+  </div>
+  
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const chartData = JSON.parse('{{ chart_data | safe }}');
+    console.log('Chart Data:', chartData);
+    
+    const ctx = document.getElementById('propertiesInquiriesChart');
+    if (!ctx) {
+      console.error('Canvas element not found!');
+      return;
+    }
+    
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: 'Properties',
+            data: chartData.properties,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#3b82f6',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: '#3b82f6'
+          },
+          {
+            label: 'Inquiries',
+            data: chartData.inquiries,
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#ef4444',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: '#ef4444'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: {
+                size: 13,
+                weight: '600'
+              },
+              color: '#333'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: {
+              size: 13,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 12
+            },
+            borderColor: 'rgba(0, 0, 0, 0.2)',
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.parsed.y;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: {
+                size: 11
+              },
+              stepSize: 1
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)',
+              drawBorder: false
+            }
+          },
+          x: {
+            ticks: {
+              font: {
+                size: 11
+              }
+            },
+            grid: {
+              display: false,
+              drawBorder: false
+            }
+          }
+        }
+      }
+    });
+    
+    console.log('Chart initialized successfully');
+  });
+</script>
+{% endblock %}

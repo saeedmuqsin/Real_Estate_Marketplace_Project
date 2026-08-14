@@ -54,7 +54,6 @@
       </div>
       <!-- Title, Location & Price -->
       <div>
-
         <h2 id="modal-title" class="text-2xl font-medium"></h2>
         <p class="flex items-center gap-1 text-slate-400 text-md mt-1">
           <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
@@ -63,9 +62,7 @@
         <div
           id="modal-price"
           class="text-xl font-medium text-slate-900 mt-2"
-        >
-       
-    </div>
+        ></div>
       </div>
 
       <!-- Description -->
@@ -89,26 +86,42 @@
           Additional Information
         </h4>
         <div class="space-y-2 text-xs">
-            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
-              <span class="text-gray-400">Property Type</span>
-              <span id="modal-property_type" class="font-medium text-slate-800"></span>
-            </div>
+          <div
+            class="flex justify-between text-[14px] py-1 border-b border-slate-50"
+          >
+            <span class="text-gray-400">Property Type</span>
+            <span
+              id="modal-property_type"
+              class="font-medium text-slate-800"
+            ></span>
+          </div>
 
-            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
-              <span class="text-gray-400">Listing Type</span>
-              <span id="modal-listing_type" class="font-medium text-slate-800"></span>
-            </div>
+          <div
+            class="flex justify-between text-[14px] py-1 border-b border-slate-50"
+          >
+            <span class="text-gray-400">Listing Type</span>
+            <span
+              id="modal-listing_type"
+              class="font-medium text-slate-800"
+            ></span>
+          </div>
 
-            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
-              <span class="text-gray-400">Property ID</span>
-              <span id="modal-property_id" class="font-medium text-slate-800"></span>
-            </div>
+          <div
+            class="flex justify-between text-[14px] py-1 border-b border-slate-50"
+          >
+            <span class="text-gray-400">Property ID</span>
+            <span
+              id="modal-property_id"
+              class="font-medium text-slate-800"
+            ></span>
+          </div>
 
-            <div class="flex justify-between text-[14px] py-1 border-b border-slate-50">
-              <span class="text-gray-400">Added On</span>
-              <span id="modal-date" class="font-medium text-slate-800"></span>
-            </div>
-
+          <div
+            class="flex justify-between text-[14px] py-1 border-b border-slate-50"
+          >
+            <span class="text-gray-400">Added On</span>
+            <span id="modal-date" class="font-medium text-slate-800"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -139,57 +152,74 @@
 <script>
   // Helper to swap main preview image and update border highlighting
   function selectMainImage(base64Uri, thumbElement) {
-    const mainImg = document.getElementById('modal-img');
+    const mainImg = document.getElementById("modal-img");
     mainImg.src = base64Uri;
 
     // Reset styles on all generated thumbnails
-    document.querySelectorAll('#modal-thumbnails img').forEach(img => {
-      img.classList.remove('ring-2', 'ring-blue-600', 'opacity-100');
-      img.classList.add('opacity-70');
+    document.querySelectorAll("#modal-thumbnails img").forEach((img) => {
+      img.classList.remove("ring-2", "ring-blue-600", "opacity-100");
+      img.classList.add("opacity-70");
     });
 
     // Highlight active thumbnail
     if (thumbElement) {
-      thumbElement.classList.remove('opacity-70');
-      thumbElement.classList.add('ring-2', 'ring-blue-600', 'opacity-100');
+      thumbElement.classList.remove("opacity-70");
+      thumbElement.classList.add("ring-2", "ring-blue-600", "opacity-100");
     }
   }
 
   function openPropertyModal(btn) {
     // 1. Read data attributes
-    const title = btn.getAttribute('data-title');
-    const location = btn.getAttribute('data-location');
-    const property_type = btn.getAttribute("data-property_type")
-    const listing_type = btn.getAttribute("data-listing_type")
-    const property_id = btn.getAttribute('data-property_id')
-    const price = btn.getAttribute('data-price');
-    const date = btn.getAttribute('data-date');
-    const status = btn.getAttribute('data-status');
-    const description = btn.getAttribute('data-description');
-    const editUrl = btn.getAttribute('data-edit-url');
-    const deleteUrl = btn.getAttribute('data-delete-url');
+    const title = btn.getAttribute("data-title");
+
+    const location = btn.getAttribute("data-location");
+    const property_type = btn.getAttribute("data-property_type");
+    const listing_type = btn.getAttribute("data-listing_type");
+    const property_id = btn.getAttribute("data-property_id");
+    const price = btn.getAttribute("data-price");
+    const date = btn.getAttribute("data-date");
+    const status = btn.getAttribute("data-status");
+    const description = btn.getAttribute("data-description");
+    const editUrl = btn.getAttribute("data-edit-url");
+    const deleteUrl = btn.getAttribute("data-delete-url");
 
     // 2. Read and split raw Base64 image strings by ||
-    const rawImages = btn.getAttribute('data-images') || '';
-    const imagesList = rawImages ? rawImages.split('||').map(s => s.trim()).filter(Boolean) : [];
+    const rawImages = btn.getAttribute("data-images") || "";
+    const imagesList = rawImages
+      ? rawImages
+          .split("||")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
 
     // Populate dynamic text fields
-    document.getElementById('modal-title').innerText = title;
-    document.getElementById('modal-location').innerText = location;
-    document.getElementById('modal-price').innerText = price;
-    document.getElementById('modal-date').innerText = date;
-    document.getElementById('modal-description').innerText = description;
-    document.getElementById('modal-edit-link').href = editUrl;
-    document.getElementById('modal-delete-link').href = deleteUrl;
+    document.getElementById("modal-title").innerText = title;
+    document.getElementById("modal-location").innerText = location;
+    document.getElementById("modal-price").innerText = price;
+    document.getElementById("modal-date").innerText = date;
+    document.getElementById("modal-description").innerText = description;
+    document.getElementById("modal-edit-link").href = editUrl;
+    document.getElementById("modal-delete-link").href = deleteUrl;
     document.getElementById("modal-property_type").innerText = property_type;
     document.getElementById("modal-property_id").innerText = property_id;
-    document.getElementById("modal-listing_type").innerText = listing_type
-    document.getElementById('modal-delete-link').href = deleteUrl
+    document.getElementById("modal-listing_type").innerText = listing_type;
+    document.getElementById("modal-delete-link").href = deleteUrl;
 
+    if (btn.getAttribute("data-role") == "admin") {
+      const button = document.getElementById("modal-delete-link");
+      document.getElementById("modal-edit-link").classList.add("hidden");
+      button.textContent = "Approve Property";
+      button.classList.replace("bg-rose-50", "bg-green-50") &&
+        button.classList.replace("border-rose-100", "border-green-100") &&
+        button.classList.replace("text-rose-600", "text-green-600") &&
+        button.classList.replace("hover:bg-rose-100/80", "hover:bg-green-100/80");
+      
+        button.href = "/admin/dashboard/"
+    }
     // 3. Build Main Image & Thumbnail Grid
-    const mainImg = document.getElementById('modal-img');
-    const thumbsContainer = document.getElementById('modal-thumbnails');
-    thumbsContainer.innerHTML = ''; // Clear previous thumbnails
+    const mainImg = document.getElementById("modal-img");
+    const thumbsContainer = document.getElementById("modal-thumbnails");
+    thumbsContainer.innerHTML = ""; // Clear previous thumbnails
 
     if (imagesList.length > 0) {
       // Set initial main display image to the first property image
@@ -197,59 +227,65 @@
 
       // Generate clickable thumbnail elements
       imagesList.forEach((base64DataUrl, index) => {
-        const thumb = document.createElement('img');
+        const thumb = document.createElement("img");
         thumb.src = base64DataUrl;
         thumb.alt = `Thumbnail ${index + 1}`;
         thumb.className = `w-full h-16 object-cover rounded-xl border border-slate-100 cursor-pointer transition-all ${
-          index === 0 ? 'ring-2 ring-blue-600 opacity-100' : 'opacity-70 hover:opacity-100'
+          index === 0
+            ? "ring-2 ring-blue-600 opacity-100"
+            : "opacity-70 hover:opacity-100"
         }`;
-        
+
         // Swap main image on thumbnail click
         thumb.onclick = () => selectMainImage(base64DataUrl, thumb);
         thumbsContainer.appendChild(thumb);
       });
 
-      thumbsContainer.classList.remove('hidden');
+      thumbsContainer.classList.remove("hidden");
     } else {
       // Fallback placeholder if property has no uploaded images
-      mainImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500' fill='%23f1f5f9'><rect width='100%' height='100%'/><text x='50%' y='50%' font-size='18' text-anchor='middle' fill='%2394a3b8'>No Images Available</text></svg>";
-      thumbsContainer.classList.add('hidden');
+      mainImg.src =
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500' fill='%23f1f5f9'><rect width='100%' height='100%'/><text x='50%' y='50%' font-size='18' text-anchor='middle' fill='%2394a3b8'>No Images Available</text></svg>";
+      thumbsContainer.classList.add("hidden");
     }
 
     // 4. Status Badge Styling
-    const statusBadge = document.getElementById('modal-status-badge');
+    const statusBadge = document.getElementById("modal-status-badge");
     statusBadge.innerText = status;
-    if (status === 'active') {
-      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/50 font-semibold text-xs rounded-lg shadow-xs";
-    } else if (status === 'pending') {
-      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200/50 font-semibold text-xs rounded-lg shadow-xs";
+    if (status === "active") {
+      statusBadge.className =
+        "absolute top-3 right-3 px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/50 font-semibold text-xs rounded-lg shadow-xs";
+    } else if (status === "pending") {
+      statusBadge.className =
+        "absolute top-3 right-3 px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200/50 font-semibold text-xs rounded-lg shadow-xs";
     } else {
-      statusBadge.className = "absolute top-3 right-3 px-3 py-1 bg-purple-50 text-purple-600 border border-purple-200/50 font-semibold text-xs rounded-lg shadow-xs";
+      statusBadge.className =
+        "absolute top-3 right-3 px-3 py-1 bg-purple-50 text-purple-600 border border-purple-200/50 font-semibold text-xs rounded-lg shadow-xs";
     }
 
     // 5. Open Modal with Animation
-    const modal = document.getElementById('property-modal');
-    const modalCard = document.getElementById('modal-card');
+    const modal = document.getElementById("property-modal");
+    const modalCard = document.getElementById("modal-card");
 
-    modal.classList.remove('opacity-0', 'pointer-events-none');
-    modal.classList.add('opacity-100');
-    modalCard.classList.remove('scale-95');
-    modalCard.classList.add('scale-100');
-    document.body.classList.add('overflow-hidden');
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.classList.add("opacity-100");
+    modalCard.classList.remove("scale-95");
+    modalCard.classList.add("scale-100");
+    document.body.classList.add("overflow-hidden");
   }
 
   function closePropertyModal() {
-    const modal = document.getElementById('property-modal');
-    const modalCard = document.getElementById('modal-card');
+    const modal = document.getElementById("property-modal");
+    const modalCard = document.getElementById("modal-card");
 
-    modalCard.classList.remove('scale-100');
-    modalCard.classList.add('scale-95');
-    modal.classList.remove('opacity-100');
-    modal.classList.add('opacity-0', 'pointer-events-none');
-    document.body.classList.remove('overflow-hidden');
+    modalCard.classList.remove("scale-100");
+    modalCard.classList.add("scale-95");
+    modal.classList.remove("opacity-100");
+    modal.classList.add("opacity-0", "pointer-events-none");
+    document.body.classList.remove("overflow-hidden");
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closePropertyModal();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePropertyModal();
   });
 </script>

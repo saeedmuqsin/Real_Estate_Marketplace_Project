@@ -53,14 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-
     'channels',
-
     'accounts',
     'customers',
     'properties',
     'agents',
     'inquiries',
+    'Admin'
 ]
 
 ASGI_APPLICATION = 'app.asgi.application'

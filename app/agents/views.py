@@ -18,7 +18,9 @@ from django.utils.safestring import mark_safe
 def agents_dashboard(request):
     id = request.GET.get('id')
     # basic stats
-    user_properties = request.user.profile.properties.all()
+    
+    today = datetime.date.today()
+    user_properties = request.user.profile.properties.filter(created_at__date=today)
 
     # aggregate properties per month for the current year
     current_year = datetime.date.today().year
@@ -60,6 +62,14 @@ def my_properties(request):
         'count_sold': properties.filter(status='sold').count(),
     }
     return render(request, "agents/my_properties.html", context)
+
+
+@owner_required
+def inquiries(request):
+    context = { 
+        'inquiries': Inquiry.objects.filter(profile = request.user.profile.id).all()
+    }
+    return render(request, 'agents/inquiries.html', context)
 
 @owner_required
 def settings(request):

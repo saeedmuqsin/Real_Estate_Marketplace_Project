@@ -112,6 +112,7 @@
               <button
                 class="bg-blue-500 text-white px-4 py-2 text-sm rounded-md"
                 data-title="{{ property.title }}"
+                data-role = "{{ request.user.role }}"
                 data-location="{{ property.location }}"
                 data-price="GH₵{{ property.price | intcomma }}"
                 data-property_type = "{{ property.property_type }}"
@@ -121,11 +122,9 @@
                 data-status="{{ property.status }}"
                 data-description="{{ property.description|default:'No description available.' }}"
                 data-images="{% for img in property.images.all %}data:{{ img.image_type }};base64,{{ img.image_base64 }}{% if not forloop.last %}||{% endif %}{% endfor %}"
-                data-edit-url=""
                 data-delete-url="{% url 'properties:delete_property' id=property.id %}"
                 onclick="openPropertyModal(this)"
               >
-                
                 View
             </button>
         </td>
